@@ -1,5 +1,6 @@
 import pygame
 import random
+from const import *
 
 # Инициализация Pygame
 pygame.init()
