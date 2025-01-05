@@ -7,7 +7,8 @@ size = width, height = 1500, 800
 screen = pygame.display.set_mode(size)
 animation_set = [load_image(f'photo_menu_data', f"Pac_manModel{i}.png", 'WHITE') for i in range(1, 4)]
 pygame.display.set_caption('PAC-MAN')
-sound1 = pygame.mixer.Sound('Voicy_Pac-Man Pellet Eaten.mp3')
+sound_pac = pygame.mixer.Sound('music_menu_data/Voicy_Pac-Man Pellet Eaten.mp3')
+sound_click = pygame.mixer.Sound('music_menu_data/click_sound.mp3')
 clock = pygame.time.Clock()
 
 font_fade = pygame.USEREVENT + 1
@@ -22,12 +23,12 @@ def clear_window():
     screen.fill((1, 1, 21))
 
 
-def button_maker(text):
+def button_maker(text, width, height, size):
     # Создаем объект шрифта
-    font_button = pygame.font.Font(None, 60)
+    font_button = pygame.font.Font(None, size)
 
     # Создайте поверхность для кнопки
-    button_surface = pygame.Surface((300, 100))
+    button_surface = pygame.Surface((width, height))
 
     # Отображение текста на кнопке
     text_button = font_button.render(text, True, (255, 255, 0))
@@ -39,9 +40,11 @@ def button_maker(text):
 
 # Создаем объект pygame.Rect, который представляет границы кнопки
 play_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
-quit_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 75, 300, 100)
-surf1, rect1, text1 = button_maker('Play')
-surf2, rect2, text2 = button_maker('Quit')
+quit_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)
+settings_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 75, 300, 100)
+surf_play, rect_play, text_play = button_maker('Play', 300, 100, 60)
+surf_quit, rect_quit, text_quit = button_maker('Quit', 300, 100, 60)
+surf_settings, rect_settings, text_settings = button_maker('Settings', 300, 100, 60)
 
 
 def start_window_draw(screen):
@@ -65,7 +68,8 @@ def start_window_draw(screen):
 coord_balls = [0, 200, 400, 600]
 running = True
 k = 0
-clik= False
+menu_click = False
+menu = True
 while running:
     # Получаем события из очереди событий
     for event in pygame.event.get():
@@ -74,50 +78,60 @@ while running:
             running = False
         # Проверяем событие нажатия кнопки мыши
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if play_button_rect.collidepoint(event.pos):
-                print("Button play clicked!")
-            elif quit_button_rect.collidepoint(event.pos):
-                running = False
-        if event.type == font_fade:
-            show_text = not show_text
-        if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-            clear_window()
-            clik = True
-    if not clik:
-        start_window_draw(screen)
-        if x_pos < width // 2 - 150:
-            x_pos += 10
-            image = animation_set[k // 20]
-            image1 = pygame.transform.scale(image, (110, 110))
-            screen.blit(image1, (x_pos, height // 2 - 63 - height * 0.33))
-            for coord in coord_balls:
-                if coord - 50 == x_pos:
-                    sound1.play()
+            if menu:
+                if play_button_rect.collidepoint(event.pos):
+                    sound_click.play()
+                    menu = False
+                    clear_window()
+                elif settings_button_rect.collidepoint(event.pos):
+                    sound_click.play()
+                    menu = False
+                elif quit_button_rect.collidepoint(event.pos):
+                    sound_click.play()
+                    running = False
+                if event.type == font_fade:
+                    show_text = not show_text
+                if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                    clear_window()
+                    menu_click = True
+    if menu:
+        if not menu_click:
+            start_window_draw(screen)
+            if x_pos < width // 2 - 150:
+                x_pos += 10
+                image = animation_set[k // 20]
+                image1 = pygame.transform.scale(image, (110, 110))
+                screen.blit(image1, (x_pos, height // 2 - 63 - height * 0.33))
+                for coord in coord_balls:
+                    if coord - 50 == x_pos:
+                        sound_pac.play()
+            else:
+                image1 = pygame.transform.scale(animation_set[2], (110, 110))
+                screen.blit(image1, (x_pos, height // 2 - 63 - height * 0.33))
+                if show_text:
+                    screen.blit(text_surf, (width // 2 - 190, height // 1.2))
+            k += 4
+            if k == 60:
+                k = 0
+            clock.tick(60)
+            # обновление состояния
+            time_delta = clock.tick(60) / 1000.0
         else:
-            image1 = pygame.transform.scale(animation_set[2], (110, 110))
-            screen.blit(image1, (x_pos, height // 2 - 63 - height * 0.33))
-            if show_text:
-                screen.blit(text_surf, (width // 2 - 190, height // 1.2))
-        k += 4
-        if k == 60:
-            k = 0
-        clock.tick(60)
-        # обновление состояния
-        time_delta = clock.tick(60) / 1000.0
-    else:
-        start_window_draw(screen)
-        image = load_image('photo_menu_data', 'Pac_manModel3.png', 'WHITE')
-        # рисуем спрайт
-        image1 = pygame.transform.scale(image, (110, 110))
-        screen.blit(image1, (width // 2 - 150, height // 2 - 63 - height * 0.33))
-        # Показать текст кнопки
-        surf1.blit(text1, rect1)
-        surf2.blit(text2, rect2)
-        # Нарисуйте кнопку на экране
-        screen.blit(surf1, (play_button_rect.x, play_button_rect.y))
-        screen.blit(surf2, (quit_button_rect.x, quit_button_rect.y))
-        # Обновить состояние
-        pygame.display.update()
+            start_window_draw(screen)
+            image = load_image('photo_menu_data', 'Pac_manModel3.png', 'WHITE')
+            # рисуем спрайт
+            image1 = pygame.transform.scale(image, (110, 110))
+            screen.blit(image1, (width // 2 - 150, height // 2 - 63 - height * 0.33))
+            # Показать текст кнопки
+            surf_play.blit(text_play, rect_play)
+            surf_quit.blit(text_quit, rect_quit)
+            surf_settings.blit(text_settings, rect_settings)
+            # Нарисуйте кнопку на экране
+            screen.blit(surf_play, (play_button_rect.x, play_button_rect.y))
+            screen.blit(surf_quit, (quit_button_rect.x, quit_button_rect.y))
+            screen.blit(surf_settings, (settings_button_rect.x, settings_button_rect.y))
+            # Обновить состояние
+            pygame.display.update()
     pygame.display.flip()
 
 # Тимур В.
