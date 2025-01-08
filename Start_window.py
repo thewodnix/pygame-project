@@ -134,5 +134,4 @@ while running:
             # Обновить состояние
             pygame.display.update()
     pygame.display.flip()
-
 # Тимур В.

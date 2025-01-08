@@ -13,6 +13,7 @@ if level == 1:
     cell_size = 60
     # Создание отступа
     strip = 150
+
 elif level == 2:
     cell_size = 34
     strip = 360
