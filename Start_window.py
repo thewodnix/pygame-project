@@ -29,9 +29,10 @@ def button_maker(text, width, height, size):
 
     # Создайте поверхность для кнопки
     button_surface = pygame.Surface((width, height))
+    button_surface.fill((255, 255, 0))
 
     # Отображение текста на кнопке
-    text_button = font_button.render(text, True, (255, 255, 0))
+    text_button = font_button.render(text, True, (0, 0, 0))
     text_rect = text_button.get_rect(
         center=(button_surface.get_width() / 2,
                 button_surface.get_height() / 2))
