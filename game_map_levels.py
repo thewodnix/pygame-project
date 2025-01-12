@@ -18,6 +18,10 @@ elif level == 2:
     cell_size = 34
     strip = 360
 
+elif level == 3:
+    cell_size = 25
+    strip = 400
+
 # Создание радиуса шариков
 r = abs(6 - level)
 
@@ -47,7 +51,7 @@ while running:
                 pygame.draw.rect(screen, (0, 0, 0),
                                  (strip + col_index * cell_size, row_index * cell_size, cell_size, cell_size))
                 pygame.draw.circle(screen, (255, 255, 0), (
-                strip + col_index * cell_size + cell_size // 2, row_index * cell_size + cell_size // 2), r)
+                    strip + col_index * cell_size + cell_size // 2, row_index * cell_size + cell_size // 2), r)
             elif cell == 'g':
                 pygame.draw.rect(screen, (30, 10, 10),
                                  (strip + col_index * cell_size, row_index * cell_size, cell_size, cell_size))
