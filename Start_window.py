@@ -199,7 +199,7 @@ while running:
                         clear_window()
                     elif settings_button_rect.collidepoint(event.pos):
                         sound_click.play()
-                        menu = False
+                        clear_window()
                     elif quit_button_rect.collidepoint(event.pos):
                         sound_click.play()
                         running = False
@@ -214,6 +214,7 @@ while running:
                         if back_button_rect.collidepoint(event.pos):
                             sound_click.play()
                             menu = True
+                            level_selection_flag = False
                         level = button_level_clicked_checker(event.pos)
                         if level > 0:
                             level_selected = True
