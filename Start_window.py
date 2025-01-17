@@ -290,4 +290,5 @@ while running:
     counter_monitors += 1
     clock.tick(fps)
     pygame.display.flip()
+
     # Тимур В.
