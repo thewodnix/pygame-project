@@ -7,8 +7,9 @@ size = width, height = 1500, 800
 screen = pygame.display.set_mode(size)
 animation_set = [load_image(f'photo_data/photo_menu_data', f"Pac_manModel{i}.png", 'WHITE') for i in range(1, 4)]
 pygame.display.set_caption('PAC-MAN')
-sound_pac = pygame.mixer.Sound('music_menu_data/Voicy_Pac-Man Pellet Eaten.mp3')
-sound_click = pygame.mixer.Sound('music_menu_data/click_sound.mp3')
+sound_pac = pygame.mixer.Sound('music_data/music_menu_data/Voicy_Pac-Man Pellet Eaten.mp3')
+sound_click = pygame.mixer.Sound('music_data/music_menu_data/click_sound.mp3')
+fps = 60
 clock = pygame.time.Clock()
 
 font_fade = pygame.USEREVENT + 1
@@ -17,6 +18,33 @@ font_text = pygame.font.SysFont(None, 40)
 show_text = True
 text_surf = font_text.render('press  any  button  to  start', True, (255, 255, 0))
 x_pos = -90
+
+x_mouse, y_mouse = 0, 0
+mouse_sprites = pygame.sprite.Group()
+# создадим спрайт
+sprite = pygame.sprite.Sprite()
+# определим его вид
+sprite.image = load_image('data', "img.png")
+# и размеры
+sprite.rect = sprite.image.get_rect()
+# добавим спрайт в группу
+mouse_sprites.add(sprite)
+
+
+class Mouse(pygame.sprite.Sprite):
+    image = load_image('data', "img.png")
+
+    def __init__(self):
+        # Вызываем конструктор родительского класса Sprite.
+        super().__init__()
+        self.image = Mouse.image
+        self.rect = self.image.get_rect()
+
+    def movement(self, pos):
+        pygame.mouse.set_visible(False)
+        x, y = pos
+        sprite.rect.x = x
+        sprite.rect.y = y
 
 
 def menu_shower():
@@ -182,12 +210,16 @@ k = 0
 menu_click = False
 menu = True
 level_selection_flag = False
+counter_monitors = 0
 while running:
     # Получаем события из очереди событий
     for event in pygame.event.get():
         # Проверьте событие выхода
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.MOUSEMOTION and pygame.mouse.get_focused():
+            Mouse().movement(event.pos)
+            # screen.fill((1, 1, 20))
         # Проверяем событие нажатия кнопки мыши
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             if not level_selection_flag:
@@ -237,7 +269,6 @@ while running:
             k += 4
             if k == 60:
                 k = 0
-            clock.tick(60)
             # обновление состояния
             time_delta = clock.tick(60) / 1000.0
         else:
@@ -251,5 +282,12 @@ while running:
         else:
             image_downloader()
             shower_level_selection()
+    if counter_monitors > 20:
+        show_text = not show_text
+        counter_monitors = 0
+    mouse_sprites.draw(screen)
+    mouse_sprites.update()
+    counter_monitors += 1
+    clock.tick(fps)
     pygame.display.flip()
     # Тимур В.
