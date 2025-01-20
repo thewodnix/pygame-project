@@ -43,7 +43,7 @@ tile_images = {
     'passage': passage_image
 }
 player_image = load_image('photo_data/photo_menu_data/Pac_manModel3.png')
-redghost_image = load_image('photo_data/Game_photo_data/red.png')
+redghost_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/red.png'), (32, 32))
 
 
 class Passage(pygame.sprite.Sprite):
@@ -69,6 +69,9 @@ class Ground(pygame.sprite.Sprite):
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
 
+
+import pygame
+
 class RedGhost(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(ghost_group, all_sprites)
@@ -78,28 +81,35 @@ class RedGhost(pygame.sprite.Sprite):
         self.pos = pos_x, pos_y
         self.isJump = False
         self.jumpCount = 10
+        self.speed = 4
+        self.target_x = None
+        self.target_y = None
 
-    def move(self, pos):
-        if pos == 'left':
-            self.rect.x -= 5
-        elif pos == 'jump':
-            self.isJump = True
-            if self.isJump is True:
-                if self.jumpCount >= -10:
-                    if self.jumpCount < 0:
-                        self.rect.y += (self.jumpCount ** 2) // 2
-                    else:
-                        self.rect.y -= (self.jumpCount ** 2) // 2
-                    self.jumpCount -= 1
+    def move_towards(self, target_x, target_y):
+        if self.target_x is None and self.target_y is None:
+            self.target_x = target_x +  15
+            self.target_y = target_y + 15
+
+        # Двигаемся по оси X
+        if abs(self.rect.centerx - self.target_x) > self.speed:
+            if self.rect.centerx < self.target_x:
+                self.rect.x += self.speed
+            else:
+                self.rect.x -= self.speed
+        else:
+            if abs(self.rect.centery - self.target_y) > self.speed:
+                if self.rect.centery < self.target_y:
+                    self.rect.y += self.speed
                 else:
-                    self.isJump = False
-                    self.jumpCount = 10
-        # elif pos == 'down':
-        #     x, y = x, y + 1
-        elif pos == 'right':
-            self.rect.x += 5
+                    self.rect.y -= self.speed
+            else:
+                self.target_x = None
+                self.target_y = None
+
+        # Проверка на столкновение с тайлами
         if pygame.sprite.spritecollideany(self, tiles_group):
             return
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
@@ -110,6 +120,9 @@ class Player(pygame.sprite.Sprite):
         self.pos = pos_x, pos_y
         self.isJump = False
         self.jumpCount = 10
+
+    def get_position(self):
+        return self.rect.x, self.rect.y
 
     def move(self, pos):
         if pos == 'left':
@@ -217,6 +230,8 @@ def game_main():
     screen.fill((0, 0, 0))
     while True:
         clock.tick(FPS)
+        target_x, target_y = player.get_position()
+        redghost.move_towards(target_x, target_y)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
@@ -226,12 +241,15 @@ def game_main():
         # Управление на WASD
         if keys[pygame.K_a]:
             player.move('left')
+            print(player.get_position())
         if keys[pygame.K_d]:
             player.move('right')
+            print(player.get_position())
         # if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
         #     player.move('down')
             pygame.mouse.set_visible(False)
         # Обноение
+
         all_sprites.update()
         screen.fill((0, 0, 0))
         all_sprites.draw(screen)
