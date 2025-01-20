@@ -1,13 +1,27 @@
 import pygame
-import random
-import os
 import sys
+import os
 
 pygame.init()
-width, height = 1280, 720
-pygame.mixer.init()
-pygame.display.set_caption('Pygame_template')
-screen = pygame.display.set_mode((width, height))
+# размеры окна:
+tile_width = tile_height = 50
+size = width, height = 1500, 800
+# screen — холст, на котором нужно рисовать:
+screen = pygame.display.set_mode(size)
+clock = pygame.time.Clock()
+
+
+def load_level(filename):
+    filename = filename
+    # читаем уровень, убирая символы перевода строки
+    with open(filename, 'r') as mapFile:
+        level_map = [line.strip() for line in mapFile]
+
+    # и подсчитываем максимальную длину
+    max_width = max(map(len, level_map))
+
+    # дополняем каждую строку пустыми клетками ('.')
+    return list(map(lambda x: x.ljust(max_width, '.'), level_map))
 
 
 def load_image(name, colorkey=None):
@@ -20,72 +34,262 @@ def load_image(name, colorkey=None):
     return image
 
 
-# assets
-player_img = load_image('photo_data/photo_menu_data/Pac_manModel3.png')
-player_left_img = player_img
-player_right_img = player_img
+image_wall = pygame.transform.scale(load_image('photo_data/Game_photo_data/wall.png'), (50, 50))
+ground_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/ground.png'), (50, 50))
+passage_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/special_waLL.png'), (50, 50))
+tile_images = {
+    'wall': image_wall,
+    'empty': ground_image,
+    'passage': passage_image
+}
+player_image = load_image('photo_data/photo_menu_data/Pac_manModel3.png')
+redghost_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/red.png'), (32, 32))
+
+
+class Passage(pygame.sprite.Sprite):
+    def __init__(self, tile_type, pos_x, pos_y):
+        super().__init__(all_sprites)
+        self.image = tile_images[tile_type]
+        self.rect = self.image.get_rect().move(
+            tile_width * pos_x, tile_height * pos_y)
+
+
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, tile_type, pos_x, pos_y):
+        super().__init__(tiles_group, all_sprites)
+        self.image = tile_images[tile_type]
+        self.rect = self.image.get_rect().move(
+            tile_width * pos_x, tile_height * pos_y)
+
+
+class Ground(pygame.sprite.Sprite):
+    def __init__(self, tile_type, pos_x, pos_y):
+        super().__init__(all_sprites)
+        self.image = tile_images[tile_type]
+        self.rect = self.image.get_rect().move(
+            tile_width * pos_x, tile_height * pos_y)
+
+
+class RedGhost(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(ghost_group, all_sprites)
+        self.image = redghost_image
+        self.rect = self.image.get_rect().move(
+            tile_width * pos_x + 15, tile_height * pos_y + 5)
+        self.pos = pos_x, pos_y
+        self.isJump = False
+        self.jumpCount = 10
+        self.speed = 4
+        self.target_x = None
+        self.target_y = None
+
+    def move_towards(self, target_x, target_y):
+        if self.target_x is None and self.target_y is None:
+            self.target_x = target_x + 15
+            self.target_y = target_y + 15
+
+        # Двигаемся по оси X
+        if abs(self.rect.centerx - self.target_x) > self.speed:
+            if self.rect.centerx < self.target_x:
+                if pygame.sprite.spritecollideany(self, tiles_group):
+                    return
+                else:
+                    self.rect.x += self.speed
+            else:
+                if pygame.sprite.spritecollideany(self, tiles_group):
+                    return
+                else:
+                    self.rect.x -= self.speed
+        else:
+            if abs(self.rect.centery - self.target_y) > self.speed:
+                if self.rect.centery < self.target_y:
+                    if pygame.sprite.spritecollideany(self, tiles_group):
+                        return
+                    else:
+                        self.rect.y += self.speed
+                else:
+                    if pygame.sprite.spritecollideany(self, tiles_group):
+                        return
+                    else:
+                        self.rect.y -= self.speed
+            else:
+                self.target_x = None
+                self.target_y = None
+
+        # # Проверка на столкновение с тайлами
+        # if pygame.sprite.spritecollideany(self, tiles_group):
+        #     return
 
 
 class Player(pygame.sprite.Sprite):
-
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = player_img
-        self.image.set_colorkey(0)
-        self.rect = self.image.get_rect()
-        self.rect.midbottom = (width / 2, height)
+    def __init__(self, pos_x, pos_y):
+        super().__init__(player_group, all_sprites)
+        self.gravity = 10
+        self.image = player_image
+        self.rect = self.image.get_rect().move(
+            tile_width * pos_x + 15, tile_height * pos_y + 5 + self.gravity)
         self.isJump = False
         self.jumpCount = 10
+        self.speed = 5
+        self.x = self.rect.x
+        self.y = self.rect.y
 
-    def update(self):
-        keys = pygame.key.get_pressed()
-        self.image = player_img
+    def get_position(self):
+        return self.rect.x, self.rect.y
 
-        if (keys[pygame.K_LEFT]) and (self.rect.x >= 0):
-            self.rect.x -= 5
-            self.image = player_left_img
-            self.image.set_colorkey("White")
-
-        if (keys[pygame.K_RIGHT]) and (self.rect.x <= 1145):
-            self.rect.x += 5
-            self.image = player_right_img
-            self.image.set_colorkey(0)
-
-        if keys[pygame.K_SPACE]:
-            self.isJump = True
-
-        if self.isJump is True:
-
-            if self.jumpCount >= -10:
-
-                if self.jumpCount < 0:
-                    self.rect.y += (self.jumpCount ** 2) // 2
-                else:
-                    self.rect.y -= (self.jumpCount ** 2) // 2
-
-                self.jumpCount -= 1
-
+    def move(self, pos):
+        if pygame.sprite.spritecollideany(self, tiles_group):
+            self.y -= self.gravity
+        else:
+            self.y += self.gravity
+        if pos == 'left':
+            if pygame.sprite.spritecollideany(self, tiles_group):
+                self.x += self.speed
             else:
-                self.isJump = False
-                self.jumpCount = 10
+                self.x -= self.speed
+            self.rect.x = self.x
+        elif pos == 'jump':
+            if pygame.sprite.spritecollideany(self, tiles_group):
+                self.y += self.speed
+            else:
+                self.y -= self.speed
+            self.rect.y = self.y
+        #     self.isJump = True
+        #     if self.isJump is True:
+        #         if self.jumpCount >= -10:
+        #             if self.jumpCount < 0:
+        #                 self.rect.y += (self.jumpCount ** 2) // 2
+        #             else:
+        #                 self.rect.y -= (self.jumpCount ** 2) // 2
+        #             self.jumpCount -= 1
+        #         else:
+        #             self.isJump = False
+        #             self.jumpCount = 10
+        elif pos == 'down':
+            if pygame.sprite.spritecollideany(self, tiles_group):
+                self.y -= self.speed
+            else:
+                self.y += self.speed
+            self.rect.y = self.y
+        elif pos == 'right':
+            if pygame.sprite.spritecollideany(self, tiles_group):
+                self.x -= self.speed
+            else:
+                self.x += self.speed
+            self.rect.x = self.x
 
 
-clock = pygame.time.Clock()
+FPS = 50
+# основной персонаж
+player = None
+# призраки
+redghost = None
+
 all_sprites = pygame.sprite.Group()
-player = Player()
-all_sprites.add(player)
+tiles_group = pygame.sprite.Group()
+player_group = pygame.sprite.Group()
+ghost_group = pygame.sprite.Group()
 
-running = True
 
-while running:
-    clock.tick(60)
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-    # Обновление
-    all_sprites.update()
-    # Рендеринг
-    screen.fill((156, 113, 58))
-    all_sprites.draw(screen)
-    pygame.display.flip()
-pygame.quit()
+def generate_level(level):
+    new_player, x, y = None, None, None
+    for y in range(len(level)):
+        for x in range(len(level[y])):
+            if level[y][x] == 'o':
+                Ground('empty', x, y)
+            elif level[y][x] == 'g':
+                Ground('empty', x, y)
+                blinki = RedGhost(x, y)
+            elif level[y][x] == 'x':
+                Tile('wall', x, y)
+            elif level[y][x] == 'p':
+                Passage('passage', x, y)
+            elif level[y][x] == 's':
+                Ground('empty', x, y)
+                new_player = Player(x, y)
+    # вернем игрока, а также размер поля в клетках
+    return new_player, x, y
+
+
+def generate_ghost(level):
+    new_ghost, x, y = None, None, None
+    for y in range(len(level)):
+        for x in range(len(level[y])):
+            if level[y][x] == 's':
+                Ground('empty', x - 1, y)
+                new_ghost = RedGhost(x, y)
+    # вернем игрока, а также размер поля в клетках
+    return new_ghost, x, y
+
+
+def terminate():
+    pygame.quit()
+    sys.exit()
+
+
+def start_screen():
+    intro_text = ["ЗАСТАВКА", "",
+                  "Правила игры",
+                  "Если в правилах несколько строк,",
+                  "приходится выводить их построчно"]
+
+    fon = pygame.transform.scale(load_image('fon.jpg'), (width, height))
+    screen.blit(fon, (0, 0))
+    font = pygame.font.Font(None, 30)
+    text_coord = 50
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color('black'))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = 10
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+            elif event.type == pygame.KEYDOWN or \
+                    event.type == pygame.MOUSEBUTTONDOWN:
+                return  # начинаем игру
+        pygame.display.flip()
+        clock.tick(FPS)
+
+
+def game_main():
+    player, level_x, level_y = generate_level(load_level('levels_data/level1_data'))
+    redghost, level_x, level_y = generate_ghost(load_level('levels_data/level1_data'))
+    screen.fill((0, 0, 0))
+    while True:
+        clock.tick(FPS)
+        target_x, target_y = player.get_position()
+        redghost.move_towards(target_x, target_y)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                terminate()
+        keys = pygame.key.get_pressed()
+        # Управление на WASD
+        if keys[pygame.K_a]:
+            player.move('left')
+        if keys[pygame.K_d]:
+            player.move('right')
+        if keys[pygame.K_SPACE]:
+            player.move('jump')
+        if keys[pygame.K_s]:
+            player.move('down')
+            # if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
+            #     player.move('down')
+            pygame.mouse.set_visible(False)
+        # Обноение
+
+        all_sprites.update()
+        screen.fill((0, 0, 0))
+        all_sprites.draw(screen)
+        player_group.draw(screen)
+        tiles_group.draw(screen)
+        pygame.display.flip()
+
+
+# start_screen()
+game_main()
