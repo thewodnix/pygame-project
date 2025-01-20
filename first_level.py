@@ -85,15 +85,16 @@ class Player(pygame.sprite.Sprite):
         elif pos == 'jump':
             self.isJump = True
             if self.isJump is True:
-                if self.jumpCount >= -10:
-                    if self.jumpCount < 0:
-                        self.rect.y += (self.jumpCount ** 2) // 2
+                while self.jumpCount != self.rect.y:
+                    if self.jumpCount >= -10:
+                        if self.jumpCount < 0:
+                            self.rect.y += (self.jumpCount ** 2) // 2
+                        else:
+                            self.rect.y -= (self.jumpCount ** 2) // 2
+                        self.jumpCount -= 1
                     else:
-                        self.rect.y -= (self.jumpCount ** 2) // 2
-                    self.jumpCount -= 1
-                else:
-                    self.isJump = False
-                    self.jumpCount = 10
+                        self.isJump = False
+                        self.jumpCount = 10
         # elif pos == 'down':
         #     x, y = x, y + 1
         elif pos == 'right':
