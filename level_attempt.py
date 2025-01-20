@@ -154,6 +154,7 @@ class Player(pygame.sprite.Sprite):
             else:
                 self.y -= self.speed
             self.rect.y = self.y
+
         #     self.isJump = True
         #     if self.isJump is True:
         #         if self.jumpCount >= -10:
