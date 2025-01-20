@@ -43,6 +43,7 @@ tile_images = {
     'passage': passage_image
 }
 player_image = load_image('photo_data/photo_menu_data/Pac_manModel3.png')
+redghost_image = load_image('photo_data/Game_photo_data/red.png')
 
 
 class Passage(pygame.sprite.Sprite):
@@ -68,6 +69,37 @@ class Ground(pygame.sprite.Sprite):
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
 
+class RedGhost(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(ghost_group, all_sprites)
+        self.image = redghost_image
+        self.rect = self.image.get_rect().move(
+            tile_width * pos_x + 15, tile_height * pos_y + 5)
+        self.pos = pos_x, pos_y
+        self.isJump = False
+        self.jumpCount = 10
+
+    def move(self, pos):
+        if pos == 'left':
+            self.rect.x -= 5
+        elif pos == 'jump':
+            self.isJump = True
+            if self.isJump is True:
+                if self.jumpCount >= -10:
+                    if self.jumpCount < 0:
+                        self.rect.y += (self.jumpCount ** 2) // 2
+                    else:
+                        self.rect.y -= (self.jumpCount ** 2) // 2
+                    self.jumpCount -= 1
+                else:
+                    self.isJump = False
+                    self.jumpCount = 10
+        # elif pos == 'down':
+        #     x, y = x, y + 1
+        elif pos == 'right':
+            self.rect.x += 5
+        if pygame.sprite.spritecollideany(self, tiles_group):
+            return
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
@@ -105,10 +137,14 @@ class Player(pygame.sprite.Sprite):
 FPS = 50
 # основной персонаж
 player = None
+#призраки
+redghost = None
+
 
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
+ghost_group = pygame.sprite.Group()
 
 
 def generate_level(level):
@@ -128,6 +164,16 @@ def generate_level(level):
                 new_player = Player(x, y)
     # вернем игрока, а также размер поля в клетках
     return new_player, x, y
+
+def generate_ghost(level):
+    new_ghost, x, y = None, None, None
+    for y in range(len(level)):
+        for x in range(len(level[y])):
+            if level[y][x] == 's':
+                Ground('empty', x - 1, y)
+                new_ghost = RedGhost(x, y)
+    # вернем игрока, а также размер поля в клетках
+    return new_ghost, x, y
 
 
 def terminate():
@@ -167,6 +213,7 @@ def start_screen():
 
 def game_main():
     player, level_x, level_y = generate_level(load_level('levels_data/level1_data'))
+    redghost, level_x, level_y = generate_ghost(load_level('levels_data/level1_data'))
     screen.fill((0, 0, 0))
     while True:
         clock.tick(FPS)
