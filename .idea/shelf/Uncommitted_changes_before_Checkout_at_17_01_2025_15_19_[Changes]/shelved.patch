@@ -1,0 +1,83 @@
+Index: Start_window.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import pygame\r\nfrom load_sprites import load_image\r\n\r\n# Создаём окно Pygame\r\npygame.init()\r\nsize = width, height = 1500, 800\r\nscreen = pygame.display.set_mode(size)\r\nanimation_set = [load_image(f'assets/photo_menu_data', f\"Pac_manModel{i}.png\", 'WHITE') for i in range(1, 4)]\r\npygame.display.set_caption('PAC-MAN')\r\nsound_pac = pygame.mixer.Sound('1452.mp3')\r\nsound_click = pygame.mixer.Sound('1452.mp3')\r\nclock = pygame.time.Clock()\r\n\r\nfont_fade = pygame.USEREVENT + 1\r\npygame.time.set_timer(font_fade, 800)\r\nfont_text = pygame.font.SysFont(None, 40)\r\nshow_text = True\r\ntext_surf = font_text.render('press  any  button  to  start', True, (255, 255, 0))\r\nx_pos = -90\r\n\r\n\r\ndef clear_window():\r\n    screen.fill((1, 1, 21))\r\n\r\n\r\ndef button_maker(text, width, height, size, font=None):\r\n    # Создаем объект шрифта\r\n    font_button = pygame.font.Font(font, size)\r\n\r\n    # Создайте поверхность для кнопки\r\n    button_surface = pygame.Surface((width, height))\r\n\r\n    # Отображение текста на кнопке\r\n    text_button = font_button.render(text, True, (255, 255, 0))\r\n    text_rect = text_button.get_rect(\r\n        center=(button_surface.get_width() / 2,\r\n                button_surface.get_height() / 2))\r\n    return button_surface, text_rect, text_button\r\n\r\n\r\n# Создаем объект pygame.Rect, который представляет границы кнопки\r\nplay_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)\r\nquit_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)\r\nmusic_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)\r\nsettings_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 75, 300, 100)\r\nsurf_play, rect_play, text_play = button_maker('Play', 300, 100, 60)\r\nsurf_quit, rect_quit, text_quit = button_maker('Quit', 300, 100, 60)\r\nsurf_settings, rect_settings, text_settings = button_maker('Settings', 300, 100, 60)\r\nsurf_music, rect_music, text_music = button_maker('Music', 300, 100, 60, 'assets/fonts/title.ttf')\r\n\r\n\r\n\r\ndef start_window_draw(screen):\r\n    screen.fill((1, 1, 20))\r\n    font = pygame.font.Font(None, 20)\r\n    text = font.render(\"By VORFIL Team\", True, (255, 255, 0))\r\n    text_x = width // 2 - text.get_width() // 2 - 270\r\n    text_y = height // 2 - text.get_height() // 2 + 60 - height * 0.33\r\n    screen.blit(text, (text_x, text_y))\r\n    font = pygame.font.Font(None, 200)\r\n    text = font.render(\"PA   -MAN\", True, (255, 255, 0))\r\n    text_x = width // 2 - text.get_width() // 2\r\n    text_y = height // 2 - text.get_height() // 2 - height * 0.33\r\n    screen.blit(text, (text_x, text_y))\r\n    text_w = text.get_width()\r\n    text_h = text.get_height()\r\n    pygame.draw.rect(screen, (255, 255, 0), (text_x - 10, text_y - 10,\r\n                                             text_w + 20, text_h + 20), 1)\r\n\r\ndef draw(screen):\r\n    screen.fill((1, 1, 20))\r\n    font = pygame.font.Font('assets/fonts/title.ttf', 200)\r\n    text = font.render(\"Settings\", True, (255, 255, 0))\r\n    text_x = width // 2 - text.get_width() // 2\r\n    text_y = height // 2 - text.get_height() // 2 - height * 0.33\r\n    screen.blit(text, (text_x, text_y))\r\n    text_w = text.get_width()\r\n    text_h = text.get_height()\r\n\r\ncoord_balls = [0, 200, 400, 600]\r\nrunning = True\r\nk = 0\r\nmenu_click = False\r\nmenu = True\r\nstngs = False\r\nwhile running:\r\n    # Получаем события из очереди событий\r\n    for event in pygame.event.get():\r\n        # Проверьте событие выхода\r\n        if event.type == pygame.QUIT:\r\n            running = False\r\n        # Проверяем событие нажатия кнопки мыши\r\n        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:\r\n            if menu:\r\n                if play_button_rect.collidepoint(event.pos):\r\n                    sound_click.play()\r\n                    menu = False\r\n                    clear_window()\r\n                    print(1)\r\n                elif settings_button_rect.collidepoint(event.pos):\r\n                    clear_window()\r\n                    sound_click.play()\r\n                    menu = False\r\n                    draw(screen)\r\n                    stngs = True\r\n                    print(2)\r\n                elif quit_button_rect.collidepoint(event.pos):\r\n                    sound_click.play()\r\n                    running = False\r\n                    print(3)\r\n                if event.type == font_fade:\r\n                    show_text = not show_text\r\n                if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:\r\n                    print(5)\r\n                    menu_click = True\r\n    if menu:\r\n        if not menu_click:\r\n            start_window_draw(screen)\r\n            if x_pos < width // 2 - 150:\r\n                x_pos += 10\r\n                image = animation_set[k // 20]\r\n                image1 = pygame.transform.scale(image, (110, 110))\r\n                screen.blit(image1, (x_pos, height // 2 - 63 - height * 0.33))\r\n                for coord in coord_balls:\r\n                    if coord - 50 == x_pos:\r\n                        sound_pac.play()\r\n            else:\r\n                image1 = pygame.transform.scale(animation_set[2], (110, 110))\r\n                screen.blit(image1, (x_pos, height // 2 - 63 - height * 0.33))\r\n                if show_text:\r\n                    screen.blit(text_surf, (width // 2 - 190, height // 1.2))\r\n            k += 4\r\n            if k == 60:\r\n                k = 0\r\n            clock.tick(60)\r\n            # обновление состояния\r\n            time_delta = clock.tick(60) / 1000.0\r\n        else:\r\n            start_window_draw(screen)\r\n            image = load_image('assets/photo_menu_data', 'Pac_manModel3.png', 'WHITE')\r\n            # рисуем спрайт\r\n            image1 = pygame.transform.scale(image, (110, 110))\r\n            screen.blit(image1, (width // 2 - 150, height // 2 - 63 - height * 0.33))\r\n            # Показать текст кнопки\r\n            surf_play.blit(text_play, rect_play)\r\n            surf_quit.blit(text_quit, rect_quit)\r\n            surf_settings.blit(text_settings, rect_settings)\r\n            # Нарисуйте кнопку на экране\r\n            screen.blit(surf_play, (play_button_rect.x, play_button_rect.y))\r\n            screen.blit(surf_quit, (quit_button_rect.x, quit_button_rect.y))\r\n            screen.blit(surf_settings, (settings_button_rect.x, settings_button_rect.y))\r\n            # Обновить состояние\r\n            pygame.display.update()\r\n\r\n    if stngs:\r\n        surf_music.blit(text_music, rect_music)\r\n        screen.blit(surf_music, (music_button_rect.x, music_button_rect.y))\r\n        pygame.display.update()\r\n        for event in pygame.event.get():\r\n            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:\r\n                if music_button_rect.collidepoint(event.pos):\r\n                    print(1)\r\n\r\n    pygame.display.flip()\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/Start_window.py b/Start_window.py
+--- a/Start_window.py	(revision a19062d4ebdda1cc18282fa0992ce6e2c1f73f04)
++++ b/Start_window.py	(date 1736858851613)
+@@ -1,4 +1,6 @@
+ import pygame
++from pygame import KEYDOWN
++
+ from load_sprites import load_image
+ 
+ # Создаём окно Pygame
+@@ -7,8 +9,8 @@
+ screen = pygame.display.set_mode(size)
+ animation_set = [load_image(f'assets/photo_menu_data', f"Pac_manModel{i}.png", 'WHITE') for i in range(1, 4)]
+ pygame.display.set_caption('PAC-MAN')
+-sound_pac = pygame.mixer.Sound('1452.mp3')
+-sound_click = pygame.mixer.Sound('1452.mp3')
++sound_pac = pygame.mixer.Sound('tishyna-1m.mp3')
++sound_click = pygame.mixer.Sound('tishyna-1m.mp3')
+ clock = pygame.time.Clock()
+ 
+ font_fade = pygame.USEREVENT + 1
+@@ -50,6 +52,7 @@
+ 
+ 
+ 
++
+ def start_window_draw(screen):
+     screen.fill((1, 1, 20))
+     font = pygame.font.Font(None, 20)
+@@ -77,20 +80,25 @@
+     text_w = text.get_width()
+     text_h = text.get_height()
+ 
++
++
+ coord_balls = [0, 200, 400, 600]
+ running = True
+ k = 0
+ menu_click = False
+ menu = True
+ stngs = False
++
+ while running:
+     # Получаем события из очереди событий
+     for event in pygame.event.get():
+         # Проверьте событие выхода
+         if event.type == pygame.QUIT:
+             running = False
++        if event.type == pygame.K_ESCAPE:
++            start_window_draw(screen)
+         # Проверяем событие нажатия кнопки мыши
+-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
++        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+             if menu:
+                 if play_button_rect.collidepoint(event.pos):
+                     sound_click.play()
+@@ -155,11 +163,19 @@
+     if stngs:
+         surf_music.blit(text_music, rect_music)
+         screen.blit(surf_music, (music_button_rect.x, music_button_rect.y))
++
++        surf_quit.blit(text_quit, rect_quit)
++        screen.blit(surf_quit, (quit_button_rect.x, quit_button_rect.y))
++
+         pygame.display.update()
+         for event in pygame.event.get():
++            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
++                if quit_button_rect.collidepoint(event.pos):
++                    print(1)
+             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                 if music_button_rect.collidepoint(event.pos):
+                     print(1)
+ 
++
+     pygame.display.flip()
+ 

@@ -182,7 +182,6 @@ tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 ghost_group = pygame.sprite.Group()
 
-
 def generate_level(level):
     new_player, x, y = None, None, None
     for y in range(len(level)):
