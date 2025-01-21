@@ -113,7 +113,6 @@ def shower_level_selection():
     screen.blit(surf_snd_level, (snd_level_rect.x, snd_level_rect.y))
     screen.blit(surf_trd_level, (trd_level_rect.x, trd_level_rect.y))
 
-
 def button_maker(text, width, height, size):
     # Создаем объект шрифта
     font_button = pygame.font.Font(None, size)
@@ -131,6 +130,23 @@ def button_maker(text, width, height, size):
 
 def clear_window():
     screen.fill((1, 1, 21))
+
+
+# Создаем объект pygame.Rect, который представляет границы кнопки
+back_button_rect = pygame.Rect(width // 2 - 100, height - 125, 200, 100)
+fst_level_rect = pygame.Rect(width // 3 - 315, height // 2 + 50, 150, 50)
+snd_level_rect = pygame.Rect(width // 2 - 75, height // 2 + 50, 150, 50)
+trd_level_rect = pygame.Rect(width - 350, height // 2 + 50, 150, 50)
+surf_back, rect_back, text_back = button_maker('Back', 200, 100, 75)
+surf_fst_level, fst_level_back, fst_level_text = button_maker('1 Level', 150, 50, 50)
+surf_snd_level, snd_level_back, snd_level_text = button_maker('2 Level', 150, 50, 50)
+surf_trd_level, trd_level_back, trd_level_text = button_maker('3 Level', 150, 50, 50)
+play_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
+quit_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)
+settings_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 75, 300, 100)
+surf_play, rect_play, text_play = button_maker('Play', 300, 100, 60)
+surf_quit, rect_quit, text_quit = button_maker('Quit', 300, 100, 60)
+surf_settings, rect_settings, text_settings = button_maker('Settings', 300, 100, 60)
 
 
 def start_window_draw(screen):
@@ -152,23 +168,6 @@ def start_window_draw(screen):
 
 
 def start_Menu():
-    # Создаем объект pygame.Rect, который представляет границы кнопки
-    back_button_rect = pygame.Rect(width // 2 - 100, height - 125, 200, 100)
-    fst_level_rect = pygame.Rect(width // 3 - 315, height // 2 + 50, 150, 50)
-    snd_level_rect = pygame.Rect(width // 2 - 75, height // 2 + 50, 150, 50)
-    trd_level_rect = pygame.Rect(width - 350, height // 2 + 50, 150, 50)
-    surf_back, rect_back, text_back = button_maker('Back', 200, 100, 75)
-    surf_fst_level, fst_level_back, fst_level_text = button_maker('1 Level', 150, 50, 50)
-    surf_snd_level, snd_level_back, snd_level_text = button_maker('2 Level', 150, 50, 50)
-    surf_trd_level, trd_level_back, trd_level_text = button_maker('3 Level', 150, 50, 50)
-
-    play_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
-    quit_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)
-    settings_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 75, 300, 100)
-    surf_play, rect_play, text_play = button_maker('Play', 300, 100, 60)
-    surf_quit, rect_quit, text_quit = button_maker('Quit', 300, 100, 60)
-    surf_settings, rect_settings, text_settings = button_maker('Settings', 300, 100, 60)
-
     font_fade = pygame.USEREVENT + 1
     pygame.time.set_timer(font_fade, 800)
     font_text = pygame.font.SysFont(None, 40)
