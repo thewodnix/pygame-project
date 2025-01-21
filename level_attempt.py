@@ -1,6 +1,10 @@
+from idlelib.debugger_r import close_subprocess_debugger
+
 import pygame
 import sys
 import os
+
+from pygame.cursors import diamond
 
 pygame.init()
 # размеры окна:
@@ -31,12 +35,20 @@ def load_image(name, colorkey=None):
         print(f"Файл с изображением '{fullname}' не найден")
         sys.exit()
     image = pygame.image.load(fullname)
+    if colorkey is not None:
+        image = image.convert()
+        if colorkey == -1:
+            colorkey = image.get_at((0, 0))
+        image.set_colorkey(colorkey)
+    else:
+        image = image.convert_alpha()
     return image
 
 
 image_wall = pygame.transform.scale(load_image('photo_data/Game_photo_data/wall.png'), (50, 50))
 ground_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/ground.png'), (50, 50))
 passage_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/special_waLL.png'), (50, 50))
+rock_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/rock.png', 'White'), (20, 20))
 tile_images = {
     'wall': image_wall,
     'empty': ground_image,
@@ -46,9 +58,17 @@ player_image = load_image('photo_data/photo_menu_data/Pac_manModel3.png')
 redghost_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/red.png'), (32, 32))
 
 
+class Cookie(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(all_sprites, cookie_group)
+        self.image = rock_image
+        self.rect = self.image.get_rect().move(
+            tile_width * pos_x + 15, tile_height * pos_y + 15)
+
+
 class Passage(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y):
-        super().__init__(all_sprites)
+        super().__init__(all_sprites, tiles_pac_group)
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
@@ -56,7 +76,7 @@ class Passage(pygame.sprite.Sprite):
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y):
-        super().__init__(tiles_group, all_sprites)
+        super().__init__(tiles_ghosts_group, tiles_pac_group, all_sprites)
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
@@ -92,22 +112,22 @@ class RedGhost(pygame.sprite.Sprite):
         if abs(self.rect.centerx - self.target_x) > self.speed:
             if self.rect.centerx < self.target_x:
                 self.rect.x += self.speed
-                if pygame.sprite.spritecollideany(self, tiles_group):
+                if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
                     self.rect.x -= self.speed
             else:
                 self.rect.x -= self.speed
-                if pygame.sprite.spritecollideany(self, tiles_group):
+                if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
                     self.rect.x += self.speed
 
         else:
             if abs(self.rect.centery - self.target_y) > self.speed:
                 if self.rect.centery < self.target_y:
                     self.rect.y += self.speed
-                    if pygame.sprite.spritecollideany(self, tiles_group):
+                    if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
                         self.rect.y -= self.speed
                 else:
                     self.rect.y -= self.speed
-                    if pygame.sprite.spritecollideany(self, tiles_group):
+                    if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
                         self.rect.y += self.speed
             else:
                 self.target_x = None
@@ -143,33 +163,34 @@ class Player(pygame.sprite.Sprite):
         print(pos, self.get_position(), self.y, self.x)
         if pos == 'left':
             self.rect.x -= self.speed
-            if pygame.sprite.spritecollideany(self, tiles_group):
+            if pygame.sprite.spritecollideany(self, tiles_pac_group):
                 self.rect.x += self.speed
             print(pos, self.get_position(), self.y, self.x)
             # self.rect.x = self.x
         elif pos == 'jump':
             self.rect.y -= self.speed
-            if pygame.sprite.spritecollideany(self, tiles_group):
+            if pygame.sprite.spritecollideany(self, tiles_pac_group):
                 self.rect.y += self.speed
-        #     self.isJump = True
-        #     if self.isJump is True:
-        #         if self.jumpCount >= -10:
-        #             if self.jumpCount < 0:
-        #                 self.rect.y += (self.jumpCount ** 2) // 2
-        #             else:
-        #                 self.rect.y -= (self.jumpCount ** 2) // 2
-        #             self.jumpCount -= 1
-        #         else:
-        #             self.isJump = False
-        #             self.jumpCount = 10
+            self.isJump = True
+            # if self.isJump is True:
+            #     if self.jumpCount >= -10:
+            #         if self.jumpCount < 0:
+            #             self.rect.y += (self.jumpCount ** 2) // 2
+            #         else:
+            #             self.rect.y -= (self.jumpCount ** 2) // 2
+            #         self.jumpCount -= 1
+            #     else:
+            #         self.isJump = False
+            #         self.jumpCount = 10
         elif pos == 'down':
             self.rect.y += self.speed
-            if pygame.sprite.spritecollideany(self, tiles_group):
+            if pygame.sprite.spritecollideany(self, tiles_pac_group):
                 self.rect.y -= self.speed
         elif pos == 'right':
             self.rect.x += self.speed
-            if pygame.sprite.spritecollideany(self, tiles_group):
+            if pygame.sprite.spritecollideany(self, tiles_pac_group):
                 self.rect.x -= self.speed
+
 
 FPS = 50
 # основной персонаж
@@ -178,9 +199,12 @@ player = None
 redghost = None
 
 all_sprites = pygame.sprite.Group()
-tiles_group = pygame.sprite.Group()
+cookie_group = pygame.sprite.Group()
+tiles_pac_group = pygame.sprite.Group()
+tiles_ghosts_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 ghost_group = pygame.sprite.Group()
+
 
 def generate_level(level):
     new_player, x, y = None, None, None
@@ -188,6 +212,7 @@ def generate_level(level):
         for x in range(len(level[y])):
             if level[y][x] == 'o':
                 Ground('empty', x, y)
+                Cookie(x, y)
             elif level[y][x] == 'g':
                 Ground('empty', x, y)
                 blinki = RedGhost(x, y)
@@ -278,7 +303,8 @@ def game_main():
         screen.fill((0, 0, 0))
         all_sprites.draw(screen)
         player_group.draw(screen)
-        tiles_group.draw(screen)
+        tiles_ghosts_group.draw(screen)
+        tiles_pac_group.draw(screen)
         pygame.display.flip()
 
 

@@ -12,40 +12,6 @@ sound_click = pygame.mixer.Sound('music_data/music_menu_data/click_sound.mp3')
 fps = 60
 clock = pygame.time.Clock()
 
-font_fade = pygame.USEREVENT + 1
-pygame.time.set_timer(font_fade, 800)
-font_text = pygame.font.SysFont(None, 40)
-show_text = True
-text_surf = font_text.render('press  any  button  to  start', True, (255, 255, 0))
-x_pos = -90
-
-x_mouse, y_mouse = 0, 0
-mouse_sprites = pygame.sprite.Group()
-# создадим спрайт
-sprite = pygame.sprite.Sprite()
-# определим его вид
-sprite.image = load_image('data', "img.png")
-# и размеры
-sprite.rect = sprite.image.get_rect()
-# добавим спрайт в группу
-mouse_sprites.add(sprite)
-
-
-class Mouse(pygame.sprite.Sprite):
-    image = load_image('data', "img.png")
-
-    def __init__(self):
-        # Вызываем конструктор родительского класса Sprite.
-        super().__init__()
-        self.image = Mouse.image
-        self.rect = self.image.get_rect()
-
-    def movement(self, pos):
-        pygame.mouse.set_visible(False)
-        x, y = pos
-        sprite.rect.x = x
-        sprite.rect.y = y
-
 
 def menu_shower():
     start_window_draw(screen)
@@ -185,110 +151,116 @@ def start_window_draw(screen):
                                              text_w + 20, text_h + 20), 1)
 
 
-# Создаем объект pygame.Rect, который представляет границы кнопки
-back_button_rect = pygame.Rect(width // 2 - 100, height - 125, 200, 100)
-fst_level_rect = pygame.Rect(width // 3 - 315, height // 2 + 50, 150, 50)
-snd_level_rect = pygame.Rect(width // 2 - 75, height // 2 + 50, 150, 50)
-trd_level_rect = pygame.Rect(width - 350, height // 2 + 50, 150, 50)
-surf_back, rect_back, text_back = button_maker('Back', 200, 100, 75)
-surf_fst_level, fst_level_back, fst_level_text = button_maker('1 Level', 150, 50, 50)
-surf_snd_level, snd_level_back, snd_level_text = button_maker('2 Level', 150, 50, 50)
-surf_trd_level, trd_level_back, trd_level_text = button_maker('3 Level', 150, 50, 50)
+def start_Menu():
+    # Создаем объект pygame.Rect, который представляет границы кнопки
+    back_button_rect = pygame.Rect(width // 2 - 100, height - 125, 200, 100)
+    fst_level_rect = pygame.Rect(width // 3 - 315, height // 2 + 50, 150, 50)
+    snd_level_rect = pygame.Rect(width // 2 - 75, height // 2 + 50, 150, 50)
+    trd_level_rect = pygame.Rect(width - 350, height // 2 + 50, 150, 50)
+    surf_back, rect_back, text_back = button_maker('Back', 200, 100, 75)
+    surf_fst_level, fst_level_back, fst_level_text = button_maker('1 Level', 150, 50, 50)
+    surf_snd_level, snd_level_back, snd_level_text = button_maker('2 Level', 150, 50, 50)
+    surf_trd_level, trd_level_back, trd_level_text = button_maker('3 Level', 150, 50, 50)
 
-play_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
-quit_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)
-settings_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 75, 300, 100)
-surf_play, rect_play, text_play = button_maker('Play', 300, 100, 60)
-surf_quit, rect_quit, text_quit = button_maker('Quit', 300, 100, 60)
-surf_settings, rect_settings, text_settings = button_maker('Settings', 300, 100, 60)
+    play_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
+    quit_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)
+    settings_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 75, 300, 100)
+    surf_play, rect_play, text_play = button_maker('Play', 300, 100, 60)
+    surf_quit, rect_quit, text_quit = button_maker('Quit', 300, 100, 60)
+    surf_settings, rect_settings, text_settings = button_maker('Settings', 300, 100, 60)
 
-level = 0
-level_selected = False
-coord_balls = [0, 200, 400, 600]
-running = True
-k = 0
-menu_click = False
-menu = True
-level_selection_flag = False
-counter_monitors = 0
-while running:
-    # Получаем события из очереди событий
-    for event in pygame.event.get():
-        # Проверьте событие выхода
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.MOUSEMOTION and pygame.mouse.get_focused():
-            Mouse().movement(event.pos)
-            # screen.fill((1, 1, 20))
-        # Проверяем событие нажатия кнопки мыши
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-            if not level_selection_flag:
-                if menu:
-                    if play_button_rect.collidepoint(event.pos):
-                        sound_click.play()
-                        menu = False
-                        level_selection_flag = True
-                        clear_window()
-                    elif settings_button_rect.collidepoint(event.pos):
-                        sound_click.play()
-                        clear_window()
-                    elif quit_button_rect.collidepoint(event.pos):
-                        sound_click.play()
-                        running = False
-                    if event.type == font_fade:
-                        show_text = not show_text
-                    if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-                        clear_window()
-                        menu_click = True
-            else:
-                if not menu:
-                    if not level_selected:
-                        if back_button_rect.collidepoint(event.pos):
+    font_fade = pygame.USEREVENT + 1
+    pygame.time.set_timer(font_fade, 800)
+    font_text = pygame.font.SysFont(None, 40)
+    show_text = True
+    text_surf = font_text.render('press  any  button  to  start', True, (255, 255, 0))
+    x_pos = -90
+    level = 0
+    level_selected = False
+    coord_balls = [0, 200, 400, 600]
+    running = True
+    k = 0
+    menu_click = False
+    menu = True
+    level_selection_flag = False
+    counter_monitors = 0
+    while running:
+        # Получаем события из очереди событий
+        for event in pygame.event.get():
+            # Проверьте событие выхода
+            if event.type == pygame.QUIT:
+                running = False
+                # screen.fill((1, 1, 20))
+            # Проверяем событие нажатия кнопки мыши
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if not level_selection_flag:
+                    if menu:
+                        if play_button_rect.collidepoint(event.pos):
                             sound_click.play()
-                            menu = True
-                            level_selection_flag = False
-                        level = button_level_clicked_checker(event.pos)
-                        if level > 0:
-                            level_selected = True
-    if menu:
-        if menu_click is False:
-            start_window_draw(screen)
-            if x_pos < width // 2 - 150:
-                x_pos += 10
-                image = animation_set[k // 20]
-                image1 = pygame.transform.scale(image, (110, 110))
-                screen.blit(image1, (x_pos, height // 2 - 63 - height * 0.33))
-                for coord in coord_balls:
-                    if coord - 50 == x_pos:
-                        sound_pac.play()
+                            menu = False
+                            level_selection_flag = True
+                            clear_window()
+                        elif settings_button_rect.collidepoint(event.pos):
+                            sound_click.play()
+                            clear_window()
+                        elif quit_button_rect.collidepoint(event.pos):
+                            sound_click.play()
+                            running = False
+                        if event.type == font_fade:
+                            show_text = not show_text
+                        if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+                            clear_window()
+                            menu_click = True
+                else:
+                    if not menu:
+                        if not level_selected:
+                            if back_button_rect.collidepoint(event.pos):
+                                sound_click.play()
+                                menu = True
+                                level_selection_flag = False
+                            level = button_level_clicked_checker(event.pos)
+                            if level > 0:
+                                level_selected = True
+        if menu:
+            if menu_click is False:
+                start_window_draw(screen)
+                if x_pos < width // 2 - 150:
+                    x_pos += 10
+                    image = animation_set[k // 20]
+                    image1 = pygame.transform.scale(image, (110, 110))
+                    screen.blit(image1, (x_pos, height // 2 - 63 - height * 0.33))
+                    for coord in coord_balls:
+                        if coord - 50 == x_pos:
+                            sound_pac.play()
+                else:
+                    image1 = pygame.transform.scale(animation_set[2], (110, 110))
+                    screen.blit(image1, (x_pos, height // 2 - 63 - height * 0.33))
+                    if show_text:
+                        screen.blit(text_surf, (width // 2 - 190, height // 1.2))
+                k += 4
+                if k == 60:
+                    k = 0
+                # обновление состояния
+                time_delta = clock.tick(60) / 1000.0
             else:
-                image1 = pygame.transform.scale(animation_set[2], (110, 110))
-                screen.blit(image1, (x_pos, height // 2 - 63 - height * 0.33))
-                if show_text:
-                    screen.blit(text_surf, (width // 2 - 190, height // 1.2))
-            k += 4
-            if k == 60:
-                k = 0
-            # обновление состояния
-            time_delta = clock.tick(60) / 1000.0
-        else:
-            menu_shower()
-            # Обновить состояние
-            pygame.display.update()
-    if not menu:
-        if level_selected:
-            screen.fill((1, 1, 20))
-            map_creation(level)
-        else:
-            image_downloader()
-            shower_level_selection()
-    if counter_monitors > 20:
-        show_text = not show_text
-        counter_monitors = 0
-    mouse_sprites.draw(screen)
-    mouse_sprites.update()
-    counter_monitors += 1
-    clock.tick(fps)
-    pygame.display.flip()
+                menu_shower()
+                # Обновить состояние
+                pygame.display.update()
+        if not menu:
+            if level_selected:
+                screen.fill((1, 1, 20))
+                map_creation(level)
+            else:
+                image_downloader()
+                shower_level_selection()
+        if counter_monitors > 20:
+            show_text = not show_text
+            counter_monitors = 0
+        counter_monitors += 1
+        clock.tick(fps)
+        pygame.display.flip()
 
-    # Тимур В.
+
+if __name__ == '__main__':
+    start_Menu()
+# Тимур В.
