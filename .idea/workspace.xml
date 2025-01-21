@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment="фикс коллизии">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment="Made menu">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_17_01_2025_15_19__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_17_01_2025_15_19__Changes_.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_21_01_2025_15_32__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_21_01_2025_15_32__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Start_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Start_window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/level_attempt.py" beforeDir="false" afterPath="$PROJECT_DIR$/level_attempt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/img.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/img_1.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,17 +44,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.Start_window.executor": "Run",
-    "Python.first_level.executor": "Run",
-    "Python.level_attempt.executor": "Run",
-    "Python.load_sprites.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Dev-level",
-    "last_opened_file_path": "C:/Users/Dont_touch/PycharmProjects/pygame-project/photo_data/Game_photo_data"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Start_window.executor&quot;: &quot;Run&quot;,
+    &quot;Python.first_level.executor&quot;: &quot;Run&quot;,
+    &quot;Python.level_attempt.executor&quot;: &quot;Run&quot;,
+    &quot;Python.load_sprites.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Dev-level&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Dont_touch/PycharmProjects/pygame-project/photo_data/Game_photo_data&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Dont_touch\PycharmProjects\pygame-project\photo_data\Game_photo_data" />
@@ -64,10 +65,9 @@
       <recent name="C:\Users\wodnix\PycharmProjects\pygame-project" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Start_window">
+  <component name="RunManager" selected="Python.level_attempt">
     <configuration name="Start_window" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pygame-project" />
-      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -89,13 +89,13 @@
     </configuration>
     <configuration name="level_attempt" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pygame-project" />
-      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.10 (pythonProject)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -111,8 +111,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.Start_window" />
         <item itemvalue="Python.level_attempt" />
+        <item itemvalue="Python.Start_window" />
       </list>
     </recent_temporary>
   </component>
@@ -186,6 +186,7 @@
     <MESSAGE value="добавил пикчу red.png" />
     <MESSAGE value="фикс коллизии" />
     <MESSAGE value="Do something" />
-    <option name="LAST_COMMIT_MESSAGE" value="Do something" />
+    <MESSAGE value="Made menu" />
+    <option name="LAST_COMMIT_MESSAGE" value="Made menu" />
   </component>
 </project>
