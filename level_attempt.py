@@ -91,27 +91,24 @@ class RedGhost(pygame.sprite.Sprite):
         # Двигаемся по оси X
         if abs(self.rect.centerx - self.target_x) > self.speed:
             if self.rect.centerx < self.target_x:
+                self.rect.x += self.speed
                 if pygame.sprite.spritecollideany(self, tiles_group):
-                    return
-                else:
-                    self.rect.x += self.speed
-            else:
-                if pygame.sprite.spritecollideany(self, tiles_group):
-                    return
-                else:
                     self.rect.x -= self.speed
+            else:
+                self.rect.x -= self.speed
+                if pygame.sprite.spritecollideany(self, tiles_group):
+                    self.rect.x += self.speed
+
         else:
             if abs(self.rect.centery - self.target_y) > self.speed:
                 if self.rect.centery < self.target_y:
+                    self.rect.y += self.speed
                     if pygame.sprite.spritecollideany(self, tiles_group):
-                        return
-                    else:
-                        self.rect.y += self.speed
-                else:
-                    if pygame.sprite.spritecollideany(self, tiles_group):
-                        return
-                    else:
                         self.rect.y -= self.speed
+                else:
+                    self.rect.y -= self.speed
+                    if pygame.sprite.spritecollideany(self, tiles_group):
+                        self.rect.y += self.speed
             else:
                 self.target_x = None
                 self.target_y = None
@@ -124,7 +121,7 @@ class RedGhost(pygame.sprite.Sprite):
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
-        self.gravity = 10
+        self.gravity = 5
         self.image = player_image
         self.rect = self.image.get_rect().move(
             tile_width * pos_x + 15, tile_height * pos_y + 5 + self.gravity)
@@ -138,22 +135,22 @@ class Player(pygame.sprite.Sprite):
         return self.rect.x, self.rect.y
 
     def move(self, pos):
-        if pygame.sprite.spritecollideany(self, tiles_group):
-            self.y -= self.gravity
-        else:
-            self.y += self.gravity
+        # if pygame.sprite.spritecollideany(self, tiles_group):
+        #     self.y -= self.gravity
+        # else:
+        #     self.y += self.gravity
+        # self.rect.y = self.y
+        print(pos, self.get_position(), self.y, self.x)
         if pos == 'left':
+            self.rect.x -= self.speed
             if pygame.sprite.spritecollideany(self, tiles_group):
-                self.x += self.speed
-            else:
-                self.x -= self.speed
-            self.rect.x = self.x
+                self.rect.x += self.speed
+            print(pos, self.get_position(), self.y, self.x)
+            # self.rect.x = self.x
         elif pos == 'jump':
+            self.rect.y -= self.speed
             if pygame.sprite.spritecollideany(self, tiles_group):
-                self.y += self.speed
-            else:
-                self.y -= self.speed
-            self.rect.y = self.y
+                self.rect.y += self.speed
         #     self.isJump = True
         #     if self.isJump is True:
         #         if self.jumpCount >= -10:
@@ -166,17 +163,14 @@ class Player(pygame.sprite.Sprite):
         #             self.isJump = False
         #             self.jumpCount = 10
         elif pos == 'down':
+            self.rect.y += self.speed
             if pygame.sprite.spritecollideany(self, tiles_group):
-                self.y -= self.speed
-            else:
-                self.y += self.speed
-            self.rect.y = self.y
+                self.rect.y -= self.speed
         elif pos == 'right':
+            self.rect.x += self.speed
             if pygame.sprite.spritecollideany(self, tiles_group):
-                self.x -= self.speed
-            else:
-                self.x += self.speed
-            self.rect.x = self.x
+                self.rect.x -= self.speed
+
 
 
 FPS = 50
