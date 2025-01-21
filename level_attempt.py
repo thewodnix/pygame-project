@@ -171,8 +171,6 @@ class Player(pygame.sprite.Sprite):
             if pygame.sprite.spritecollideany(self, tiles_group):
                 self.rect.x -= self.speed
 
-
-
 FPS = 50
 # основной персонаж
 player = None
