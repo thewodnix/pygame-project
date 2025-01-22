@@ -1,10 +1,7 @@
-from idlelib.debugger_r import close_subprocess_debugger
-
 import pygame
 import sys
 import os
 
-from pygame.cursors import diamond
 
 pygame.init()
 # размеры окна:
@@ -13,6 +10,7 @@ size = width, height = 1500, 800
 # screen — холст, на котором нужно рисовать:
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
+pick_up = pygame.mixer.Sound('music_data/Game_sounds_data/pick_up_sound.mp3')
 
 
 def load_level(filename):
@@ -48,22 +46,25 @@ def load_image(name, colorkey=None):
 image_wall = pygame.transform.scale(load_image('photo_data/Game_photo_data/wall.png'), (50, 50))
 ground_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/ground.png'), (50, 50))
 passage_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/special_waLL.png'), (50, 50))
-rock_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/rock.png', 'White'), (20, 20))
+diamond_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/diamond.png', 'White'), (20, 20))
 tile_images = {
     'wall': image_wall,
     'empty': ground_image,
     'passage': passage_image
 }
-player_image = load_image('photo_data/photo_menu_data/Pac_manModel3.png')
+player_image = load_image('photo_data/photo_menu_data/Pac_manModel3.png', 'White')
 redghost_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/red.png'), (32, 32))
 
 
-class Cookie(pygame.sprite.Sprite):
+class Diamond(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
-        super().__init__(all_sprites, cookie_group)
-        self.image = rock_image
+        super().__init__(all_sprites, diamond_group)
+        self.image = diamond_image
         self.rect = self.image.get_rect().move(
-            tile_width * pos_x + 15, tile_height * pos_y + 15)
+            tile_width * pos_x + 15, tile_height * pos_y + 25)
+
+    def get_position(self):
+        return self.rect.x, self.rect.y
 
 
 class Passage(pygame.sprite.Sprite):
@@ -133,20 +134,15 @@ class RedGhost(pygame.sprite.Sprite):
                 self.target_x = None
                 self.target_y = None
 
-        # # Проверка на столкновение с тайлами
-        # if pygame.sprite.spritecollideany(self, tiles_group):
-        #     return
-
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
-        self.gravity = 5
+        self.gravity = 4
         self.image = player_image
         self.rect = self.image.get_rect().move(
-            tile_width * pos_x + 15, tile_height * pos_y + 5 + self.gravity)
-        self.isJump = False
-        self.jumpCount = 10
+            tile_width * pos_x + 15, tile_height * pos_y + 10 + self.gravity)
+        self.jumpCount = 0
         self.speed = 5
         self.x = self.rect.x
         self.y = self.rect.y
@@ -154,34 +150,23 @@ class Player(pygame.sprite.Sprite):
     def get_position(self):
         return self.rect.x, self.rect.y
 
+    def gravitation(self):
+        self.rect.y += self.gravity
+        if pygame.sprite.spritecollideany(self, tiles_pac_group):
+            self.rect.y -= self.gravity
+
     def move(self, pos):
-        # if pygame.sprite.spritecollideany(self, tiles_group):
-        #     self.y -= self.gravity
-        # else:
-        #     self.y += self.gravity
-        # self.rect.y = self.y
-        print(pos, self.get_position(), self.y, self.x)
         if pos == 'left':
             self.rect.x -= self.speed
             if pygame.sprite.spritecollideany(self, tiles_pac_group):
                 self.rect.x += self.speed
-            print(pos, self.get_position(), self.y, self.x)
-            # self.rect.x = self.x
         elif pos == 'jump':
-            self.rect.y -= self.speed
-            if pygame.sprite.spritecollideany(self, tiles_pac_group):
-                self.rect.y += self.speed
-            self.isJump = True
-            # if self.isJump is True:
-            #     if self.jumpCount >= -10:
-            #         if self.jumpCount < 0:
-            #             self.rect.y += (self.jumpCount ** 2) // 2
-            #         else:
-            #             self.rect.y -= (self.jumpCount ** 2) // 2
-            #         self.jumpCount -= 1
-            #     else:
-            #         self.isJump = False
-            #         self.jumpCount = 10
+            self.in_air = True
+            for i in range(20):  # Delay the falling down as loops are very fast
+                if i <= 10:
+                    self.rect.y -= 0.5
+                    if pygame.sprite.spritecollideany(self, tiles_pac_group):
+                        self.rect.y += 1
         elif pos == 'down':
             self.rect.y += self.speed
             if pygame.sprite.spritecollideany(self, tiles_pac_group):
@@ -191,6 +176,72 @@ class Player(pygame.sprite.Sprite):
             if pygame.sprite.spritecollideany(self, tiles_pac_group):
                 self.rect.x -= self.speed
 
+    def diamond_pick_up(self):
+        if pygame.sprite.spritecollideany(self, diamond_group):
+            for i in diamond_group:
+                if pygame.sprite.spritecollideany(i, player_group):
+                    pick_up.play()
+                    i.kill()
+                    break
+
+        # for i in diamond_group: красиво удаляет кристаллы
+        #     print(i.kill())
+        #     break
+
+
+# class OrangeGhost(pygame.sprite.Sprite):  # Класс оранжевого призрака
+#     def __inait__(self, pos_x, pos_y):
+#         """инициализатор класса"""
+#         self.direction = 'up'
+#         self.x, self.y = pos_x, pos_y
+#         self.delay = 200
+#         self.image = pygame.image.load('photo_data/Game_photo_data/orange_ghost.png')
+#         self.image1 = pygame.transform.scale(self.image, (24, 24))
+#         self.count = 0
+#         # pygame.time.set_timer(GAME_EVENT_TYPE, self.delay)
+#
+#     # вспомогательные методы, возвращающие информацию о положении призрака / выставляющие эти значения
+#     def get_position(self):
+#         return self.x, self.y
+#
+#     def set_position(self, position):
+#         self.x, self.y = position
+#
+#     def get_direction(self):
+#         return self.direction
+#
+#     def set_direction(self, direction):
+#         self.direction = direction
+#
+#     #
+#     # def update_image(self):
+#     #     """метод обновления текстуры призрака"""
+#     #     self.image = pygame.image.load(f'characters/orange/{self.direction}{self.count % 2}.png')
+#     #     self.image1 = pygame.transform.scale(self.image, (24, 24))
+#     #     self.count += 1
+#
+#     def render(self, screen):
+#         """метод рендера призрака на экран"""
+#         delta = (self.image1.get_width() - tile_width) // 2
+#         screen.blit(self.image1, (self.x * tile_width - delta, self.y * tile_width - delta))
+#
+#     def move_orange(self):
+#         pac_pos = Player().get_position()
+#         """метод перемещения оранжевого призрака"""
+#         x = abs(pac_pos.get_position()[0] - self.get_position()[0])
+#         y = abs(pac_pos.get_position()[1] - self.get_position()[1])
+#         distance = round((x ** 2 + y ** 2) ** 0.5)
+#         if distance >= 8:
+#             next_position = self.labyrinth.find_path_step(self.orange.get_position(),
+#                                                           pac_pos.get_position(),
+#                                                           self.orange.get_direction())
+#         else:
+#             next_position = self.labyrinth.find_path_step(self.orange.get_position(),
+#                                                           (1, 13), self.orange.get_direction())
+#         self.orange.set_direction(find_direction(self.orange.get_position(), next_position))
+#         self.orange.set_position(next_position)
+#         self.orange.update_image()
+
 
 FPS = 50
 # основной персонаж
@@ -199,7 +250,7 @@ player = None
 redghost = None
 
 all_sprites = pygame.sprite.Group()
-cookie_group = pygame.sprite.Group()
+diamond_group = pygame.sprite.Group()
 tiles_pac_group = pygame.sprite.Group()
 tiles_ghosts_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
@@ -212,7 +263,7 @@ def generate_level(level):
         for x in range(len(level[y])):
             if level[y][x] == 'o':
                 Ground('empty', x, y)
-                Cookie(x, y)
+                Diamond(x, y)
             elif level[y][x] == 'g':
                 Ground('empty', x, y)
                 blinki = RedGhost(x, y)
@@ -279,6 +330,7 @@ def game_main():
     screen.fill((0, 0, 0))
     while True:
         clock.tick(FPS)
+        player.diamond_pick_up()
         target_x, target_y = player.get_position()
         redghost.move_towards(target_x, target_y)
         for event in pygame.event.get():
@@ -294,11 +346,9 @@ def game_main():
             player.move('jump')
         if keys[pygame.K_s]:
             player.move('down')
-            # if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
-            #     player.move('down')
             pygame.mouse.set_visible(False)
-        # Обноение
-
+        player.gravitation()
+        # Обновление
         all_sprites.update()
         screen.fill((0, 0, 0))
         all_sprites.draw(screen)
