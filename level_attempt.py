@@ -2,7 +2,6 @@ import pygame
 import sys
 import os
 
-
 pygame.init()
 # размеры окна:
 tile_width = tile_height = 50
@@ -11,6 +10,8 @@ size = width, height = 1500, 800
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
 pick_up = pygame.mixer.Sound('music_data/Game_sounds_data/pick_up_sound.mp3')
+pick_up_ammo = pygame.mixer.Sound('music_data/Game_sounds_data/pick_up_ammo_sound.mp3')
+shot_sound = pygame.mixer.Sound('music_data/Game_sounds_data/gun_shot.mp3')
 
 
 def load_level(filename):
@@ -47,6 +48,7 @@ image_wall = pygame.transform.scale(load_image('photo_data/Game_photo_data/wall.
 ground_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/ground.png'), (50, 50))
 passage_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/special_waLL.png'), (50, 50))
 diamond_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/diamond.png', 'White'), (20, 20))
+ammo_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/ammo.png', 'White'), (30, 30))
 tile_images = {
     'wall': image_wall,
     'empty': ground_image,
@@ -54,6 +56,20 @@ tile_images = {
 }
 player_image = load_image('photo_data/photo_menu_data/Pac_manModel3.png', 'White')
 redghost_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/red.png'), (32, 32))
+
+
+# class Bullet(pygame.sprite.Sprite):
+#     def __init__(self, pos_x, pos_y):
+#         super().__init__(all_sprites, ammo_group)
+#         self.image = ammo_image
+#         self.rect = self.image.get_rect().move(
+#             tile_width * pos_x + 2, tile_height * pos_y + 12)
+class Ammo(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(all_sprites, ammo_group)
+        self.image = ammo_image
+        self.rect = self.image.get_rect().move(
+            tile_width * pos_x + 2, tile_height * pos_y + 12)
 
 
 class Diamond(pygame.sprite.Sprite):
@@ -144,6 +160,7 @@ class Player(pygame.sprite.Sprite):
             tile_width * pos_x + 15, tile_height * pos_y + 10 + self.gravity)
         self.jumpCount = 0
         self.speed = 5
+        self.ammo_count = 0
         self.x = self.rect.x
         self.y = self.rect.y
 
@@ -181,6 +198,15 @@ class Player(pygame.sprite.Sprite):
             for i in diamond_group:
                 if pygame.sprite.spritecollideany(i, player_group):
                     pick_up.play()
+                    i.kill()
+                    break
+
+    def ammo_pick_up(self):
+        if pygame.sprite.spritecollideany(self, ammo_group):
+            for i in ammo_group:
+                if pygame.sprite.spritecollideany(i, player_group):
+                    pick_up_ammo.play()
+                    self.ammo_count += 1
                     i.kill()
                     break
 
@@ -249,6 +275,7 @@ player = None
 # призраки
 redghost = None
 
+ammo_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 diamond_group = pygame.sprite.Group()
 tiles_pac_group = pygame.sprite.Group()
@@ -269,6 +296,9 @@ def generate_level(level):
                 blinki = RedGhost(x, y)
             elif level[y][x] == 'x':
                 Tile('wall', x, y)
+            elif level[y][x] == 'a':
+                Ground('empty', x, y)
+                Ammo(x, y)
             elif level[y][x] == 'p':
                 Passage('passage', x, y)
             elif level[y][x] == 's':
@@ -331,6 +361,7 @@ def game_main():
     while True:
         clock.tick(FPS)
         player.diamond_pick_up()
+        player.ammo_pick_up()
         target_x, target_y = player.get_position()
         redghost.move_towards(target_x, target_y)
         for event in pygame.event.get():

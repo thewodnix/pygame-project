@@ -4,13 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment="Do something">
-      <change afterPath="$PROJECT_DIR$/music_data/Game_sounds_data/pick_up_sound.mp3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/photo_data/Game_photo_data/diamond.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/photo_data/Game_photo_data/orange_ghost.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+    <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment="Add pick up items, sound of this action, gravity, jump">
+      <change afterPath="$PROJECT_DIR$/music_data/Game_sounds_data/gun_shot.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/music_data/Game_sounds_data/pick_up_ammo_sound.mp3" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/photo_data/Game_photo_data/ammo.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/level_attempt.py" beforeDir="false" afterPath="$PROJECT_DIR$/level_attempt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels_data/level1_data" beforeDir="false" afterPath="$PROJECT_DIR$/levels_data/level1_data" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,7 +31,6 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -65,11 +64,13 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "Dev-level",
-    "last_opened_file_path": "C:/PycharmProjects/pygame-project/music_data"
+    "last_opened_file_path": "C:/PycharmProjects/pygame-project/music_data/Game_sounds_data"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\PycharmProjects\pygame-project\music_data\Game_sounds_data" />
+      <recent name="C:\PycharmProjects\pygame-project\photo_data\Game_photo_data" />
       <recent name="C:\PycharmProjects\pygame-project\music_data" />
       <recent name="C:\Users\Dont_touch\PycharmProjects\pygame-project\photo_data\Game_photo_data" />
       <recent name="C:\Users\wodnix\PycharmProjects\pygame-project" />
@@ -232,7 +233,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737484819079</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Add pick up items, sound of this action, gravity, jump">
+      <option name="closed" value="true" />
+      <created>1737566216927</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1737566216927</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -263,6 +272,7 @@
     <MESSAGE value="Made menu" />
     <MESSAGE value="фикс коллизии" />
     <MESSAGE value="Do something" />
-    <option name="LAST_COMMIT_MESSAGE" value="Do something" />
+    <MESSAGE value="Add pick up items, sound of this action, gravity, jump" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add pick up items, sound of this action, gravity, jump" />
   </component>
 </project>
