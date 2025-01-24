@@ -130,22 +130,30 @@ class RedGhost(pygame.sprite.Sprite):
             if self.rect.centerx < self.target_x:
                 self.rect.x += self.speed
                 if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
-                    self.rect.x -= self.speed
+                    self.rect.x -= self.speed + 5
+                    self.target_x = target_x - 15
+                    self.target_y = target_y - 15
             else:
                 self.rect.x -= self.speed
                 if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
-                    self.rect.x += self.speed
+                    self.rect.x += self.speed + 5
+                    self.target_x = target_x - 15
+                    self.target_y = target_y - 15
 
         else:
             if abs(self.rect.centery - self.target_y) > self.speed:
                 if self.rect.centery < self.target_y:
                     self.rect.y += self.speed
                     if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
-                        self.rect.y -= self.speed
+                        self.rect.y -= self.speed + 5
+                        self.target_x = target_x - 15
+                        self.target_y = target_y - 15
                 else:
                     self.rect.y -= self.speed
                     if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
-                        self.rect.y += self.speed
+                        self.rect.y += self.speed + 5
+                        self.target_x = target_x - 15
+                        self.target_y = target_y - 15
             else:
                 self.target_x = None
                 self.target_y = None
@@ -178,10 +186,9 @@ class Player(pygame.sprite.Sprite):
             if pygame.sprite.spritecollideany(self, tiles_pac_group):
                 self.rect.x += self.speed
         elif pos == 'jump':
-            self.in_air = True
             for i in range(20):  # Delay the falling down as loops are very fast
                 if i <= 10:
-                    self.rect.y -= 0.5
+                    self.rect.y -= 1
                     if pygame.sprite.spritecollideany(self, tiles_pac_group):
                         self.rect.y += 1
         elif pos == 'down':
