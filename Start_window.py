@@ -1,4 +1,6 @@
 import pygame
+from pygame import Rect
+
 from load_sprites import load_image
 
 # Создаём окно Pygame
@@ -7,8 +9,8 @@ size = width, height = 1500, 800
 screen = pygame.display.set_mode(size)
 animation_set = [load_image(f'assets/photo_menu_data', f"Pac_manModel{i}.png", 'WHITE') for i in range(1, 4)]
 pygame.display.set_caption('PAC-MAN')
-sound_pac = pygame.mixer.Sound('1452.mp3')
-sound_click = pygame.mixer.Sound('1452.mp3')
+sound_pac = pygame.mixer.Sound('tishyna-1m.mp3')
+sound_click = pygame.mixer.Sound('tishyna-1m.mp3')
 clock = pygame.time.Clock()
 
 font_fade = pygame.USEREVENT + 1
@@ -40,11 +42,14 @@ def button_maker(text, width, height, size, font=None):
 
 # Создаем объект pygame.Rect, который представляет границы кнопки
 play_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
-quit_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)
+quit_button_rect: Rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)
 music_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
+cheat_code_button_rect = pygame.Rect(0, 0, 300, 100)
+
 settings_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 75, 300, 100)
 surf_play, rect_play, text_play = button_maker('Play', 300, 100, 60)
 surf_quit, rect_quit, text_quit = button_maker('Quit', 300, 100, 60)
+surf_cheat_code, rect_cheat_code, text_cheat_code = button_maker('Cheat', 300, 100, 60)
 surf_settings, rect_settings, text_settings = button_maker('Settings', 300, 100, 60)
 surf_music, rect_music, text_music = button_maker('Music', 300, 100, 60, 'assets/fonts/title.ttf')
 
@@ -83,15 +88,24 @@ k = 0
 menu_click = False
 menu = True
 stngs = False
+cheat_code_flag = False
 while running:
     # Получаем события из очереди событий
     for event in pygame.event.get():
         # Проверьте событие выхода
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+            cheat_code_flag = True
+
         # Проверяем событие нажатия кнопки мыши
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+        if event.type == pygame.MOUSEBUTTONDOWN:
             if menu:
+                if rect_cheat_code.collidepoint(event.pos):
+                    sound_click.play()
+                    # menu = False
+                    # clear_window()
+                    print('cheat')
                 if play_button_rect.collidepoint(event.pos):
                     sound_click.play()
                     menu = False
@@ -111,7 +125,7 @@ while running:
                 if event.type == font_fade:
                     show_text = not show_text
                 if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-                    print(5)
+
                     menu_click = True
     if menu:
         if not menu_click:
@@ -142,6 +156,9 @@ while running:
             image1 = pygame.transform.scale(image, (110, 110))
             screen.blit(image1, (width // 2 - 150, height // 2 - 63 - height * 0.33))
             # Показать текст кнопки
+            if cheat_code_flag:
+                surf_cheat_code.blit(text_cheat_code, rect_cheat_code)
+                screen.blit(surf_cheat_code, (cheat_code_button_rect.x, cheat_code_button_rect.y))
             surf_play.blit(text_play, rect_play)
             surf_quit.blit(text_quit, rect_quit)
             surf_settings.blit(text_settings, rect_settings)
