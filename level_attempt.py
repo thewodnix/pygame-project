@@ -254,16 +254,12 @@ class Player(pygame.sprite.Sprite):
         self.y = self.rect.y
 
     def gun_shot_maker(self):
-        try:
-            x = self.rect.x
-            while not pygame.sprite.spritecollideany(self, tiles_pac_group) or x <= 200:
-                if pygame.sprite.spritecollideany(self, ghost_group):
-                    break
-                Bullet(x, self.rect.y)
-                x += self.speed
-        except Exception as ex:
-            print(ex)
-
+        x = self.rect.x
+        while not pygame.sprite.spritecollideany(self, tiles_pac_group) or x <= 200:
+            if pygame.sprite.spritecollideany(self, ghost_group):
+                break
+            Bullet(x, self.rect.y)
+            x += self.speed
     def get_position(self):
         return self.rect.x, self.rect.y
 
