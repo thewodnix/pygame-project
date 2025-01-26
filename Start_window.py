@@ -1,5 +1,6 @@
 import pygame
 from pygame import Rect
+import itertools
 
 from load_sprites import load_image
 
@@ -9,8 +10,8 @@ size = width, height = 1500, 800
 screen = pygame.display.set_mode(size)
 animation_set = [load_image(f'assets/photo_menu_data', f"Pac_manModel{i}.png", 'WHITE') for i in range(1, 4)]
 pygame.display.set_caption('PAC-MAN')
-sound_pac = pygame.mixer.Sound('tishyna-1m.mp3')
-sound_click = pygame.mixer.Sound('tishyna-1m.mp3')
+sound_pac = pygame.mixer.Sound('pick_up_ammo_sound.mp3')
+sound_click = pygame.mixer.Sound('pick_up_ammo_sound.mp3')
 clock = pygame.time.Clock()
 
 font_fade = pygame.USEREVENT + 1
@@ -42,16 +43,16 @@ def button_maker(text, width, height, size, font=None):
 
 # Создаем объект pygame.Rect, который представляет границы кнопки
 play_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
-quit_button_rect: Rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)
+quit_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)
 music_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
 cheat_code_button_rect = pygame.Rect(0, 0, 300, 100)
 
 settings_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 75, 300, 100)
 surf_play, rect_play, text_play = button_maker('Play', 300, 100, 60)
 surf_quit, rect_quit, text_quit = button_maker('Quit', 300, 100, 60)
-surf_cheat_code, rect_cheat_code, text_cheat_code = button_maker('Cheat', 300, 100, 60)
+surf_cheat_code, rect_cheat_code, text_cheat_code = button_maker('Cheat', 150, 50, 60)
 surf_settings, rect_settings, text_settings = button_maker('Settings', 300, 100, 60)
-surf_music, rect_music, text_music = button_maker('Music', 300, 100, 60, 'assets/fonts/title.ttf')
+surf_music, rect_music, text_music = button_maker('Music', 300, 100, 60, )
 
 
 
@@ -88,7 +89,9 @@ k = 0
 menu_click = False
 menu = True
 stngs = False
+cheatc = False
 cheat_code_flag = False
+switchermus = itertools.cycle(['Black', 'Gray'])
 while running:
     # Получаем события из очереди событий
     for event in pygame.event.get():
@@ -103,7 +106,8 @@ while running:
             if menu:
                 if rect_cheat_code.collidepoint(event.pos):
                     sound_click.play()
-                    # menu = False
+                    menu = False
+                    cheatc = True
                     # clear_window()
                     print('cheat')
                 if play_button_rect.collidepoint(event.pos):
@@ -168,15 +172,21 @@ while running:
             screen.blit(surf_settings, (settings_button_rect.x, settings_button_rect.y))
             # Обновить состояние
             pygame.display.update()
-
     if stngs:
         surf_music.blit(text_music, rect_music)
         screen.blit(surf_music, (music_button_rect.x, music_button_rect.y))
+        surf_quit.blit(text_quit, rect_quit)
+        screen.blit(surf_quit, (quit_button_rect.x, quit_button_rect.y))
         pygame.display.update()
         for event in pygame.event.get():
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if music_button_rect.collidepoint(event.pos):
-                    print(1)
+                    surf_music.fill(next(switchermus))
+                elif quit_button_rect.collidepoint(event.pos):
+                    sound_click.play()
+                    running = False
+    if cheatc:
+        print(14)
 
     pygame.display.flip()
 
