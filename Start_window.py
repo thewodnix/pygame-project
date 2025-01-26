@@ -43,17 +43,22 @@ def button_maker(text, width, height, size, font=None):
 
 # Создаем объект pygame.Rect, который представляет границы кнопки
 play_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
+surf_play, rect_play, text_play = button_maker('Play', 300, 100, 60)
+
 quit_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)
-music_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
-cheat_code_button_rect = pygame.Rect(0, 0, 300, 100)
+surf_quit, rect_quit, text_quit = button_maker('Quit', 300, 100, 60)
 
 settings_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 75, 300, 100)
-surf_play, rect_play, text_play = button_maker('Play', 300, 100, 60)
-surf_quit, rect_quit, text_quit = button_maker('Quit', 300, 100, 60)
-surf_cheat_code, rect_cheat_code, text_cheat_code = button_maker('Cheat', 150, 50, 60)
 surf_settings, rect_settings, text_settings = button_maker('Settings', 300, 100, 60)
+
+music_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
 surf_music, rect_music, text_music = button_maker('Music', 300, 100, 60, )
 
+cheat_code_button_rect = pygame.Rect(0, 0, 300, 100)
+surf_cheat_code, rect_cheat_code, text_cheat_code = button_maker('Cheat', 150, 50, 60)
+
+cheat_code_dis_button_rect = pygame.Rect(450, 265, 300, 100)
+surf_cheat_code_dis, rect_cheat_code_dis, text_cheat_code_dis = button_maker('On', 150, 50, 60)
 
 
 def start_window_draw(screen):
@@ -73,6 +78,7 @@ def start_window_draw(screen):
     pygame.draw.rect(screen, (255, 255, 0), (text_x - 10, text_y - 10,
                                              text_w + 20, text_h + 20), 1)
 
+
 def draw_stngs(screen):
     screen.fill((1, 1, 20))
     font = pygame.font.Font('assets/fonts/title.ttf', 200)
@@ -82,6 +88,7 @@ def draw_stngs(screen):
     screen.blit(text, (text_x, text_y))
     text_w = text.get_width()
     text_h = text.get_height()
+
 
 def draw_cheats(screen):
     screen.fill((1, 1, 20))
@@ -100,6 +107,7 @@ def draw_cheats(screen):
     screen.blit(text1, (text_x1, text_y1))
     text_w = text1.get_width()
     text_h = text1.get_height()
+
 
 coord_balls = [0, 200, 400, 600]
 running = True
@@ -147,7 +155,6 @@ while running:
                 if event.type == font_fade:
                     show_text = not show_text
                 if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
-
                     menu_click = True
     if menu:
         if not menu_click:
@@ -202,11 +209,20 @@ while running:
                     surf_music.fill(next(switchermus))
                 elif quit_button_rect.collidepoint(event.pos):
                     sound_click.play()
+                    surf_cheat_code_dis
                     running = False
     if cheatc:
         draw_cheats(screen)
+        surf_cheat_code_dis.blit(text_cheat_code_dis, rect_cheat_code_dis)
+        screen.blit(surf_cheat_code_dis, (cheat_code_dis_button_rect.x, cheat_code_dis_button_rect.y))
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if cheat_code_dis_button_rect.collidepoint(event.pos):
+                    print(1)
+                elif quit_button_rect.collidepoint(event.pos):
+                    sound_click.play()
+                    surf_cheat_code_dis
+                    running = False
 
-        print(14)
 
     pygame.display.flip()
-
