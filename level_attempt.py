@@ -5,7 +5,7 @@ import os
 pygame.init()
 # размеры окна:
 tile_width = tile_height = 50
-size = width, height = 1500, 800
+size = width, height = tile_width * 20, tile_height * 11
 # screen — холст, на котором нужно рисовать:
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
@@ -107,56 +107,119 @@ class Ground(pygame.sprite.Sprite):
             tile_width * pos_x, tile_height * pos_y)
 
 
+def find_direction(start, target_x, target_y):
+    """Функция, определяющая направление движения призрака, исходя из текущего и следующего положения"""
+    x, y = start
+    xn, yn = target_x, target_y
+    if xn - x >= 0:
+        return 'right'
+    if xn - x < 0:
+        return 'left'
+    if yn - y >= 0:
+        return 'down'
+    if yn - y < 0:
+        return 'jump'
+
+
 class RedGhost(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(ghost_group, all_sprites)
         self.image = redghost_image
         self.rect = self.image.get_rect().move(
-            tile_width * pos_x + 15, tile_height * pos_y + 5)
+            tile_width * 8 + 15, tile_height * 5 + 5)
         self.pos = pos_x, pos_y
-        self.isJump = False
-        self.jumpCount = 10
         self.speed = 4
-        self.target_x = None
-        self.target_y = None
+        self.cell_size = 50
+        self.target_x = 0
+        self.target_y = 0
+        self.last_moves = []
 
-    def move_towards(self, target_x, target_y):
-        if self.target_x is None and self.target_y is None:
-            self.target_x = target_x + 15
-            self.target_y = target_y + 15
+    def get_position(self):
+        return self.rect.x, self.rect.y
 
-        # Двигаемся по оси X
-        if abs(self.rect.centerx - self.target_x) > self.speed:
-            if self.rect.centerx < self.target_x:
+    def move_towards(self, target_x, target_y, player_direction):
+        print(player_direction)
+        target_ways = []
+        self.rect.x += self.speed
+        if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+            self.rect.x -= self.speed
+        else:
+            target_ways.append(((self.rect.x - target_x) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5)
+            self.rect.x -= self.speed
+        self.rect.x -= self.speed
+        if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+            self.rect.x += self.speed
+        else:
+            target_ways.append(((target_x - self.rect.x) ** 2 + (target_y - self.rect.y) ** 2) ** 0.5)
+            self.rect.x += self.speed
+        self.rect.y -= self.speed
+        if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+            self.rect.y += self.speed
+        else:
+            target_ways.append(((target_x - self.rect.x) ** 2 + (target_y - self.rect.y) ** 2) ** 0.5)
+            self.rect.y += self.speed
+        self.rect.y += self.speed
+        if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+            self.rect.y -= self.speed
+        else:
+            target_ways.append(((target_x - self.rect.x) ** 2 + (target_y - self.rect.y) ** 2) ** 0.5)
+            self.rect.y -= self.speed
+        min_value = min(target_ways)
+        if player_direction == 'right':
+            if min_value == (((target_x - self.rect.x - self.speed) ** 2 + (target_y - self.rect.y) ** 2) ** 0.5) and min_value not in self.last_moves:
                 self.rect.x += self.speed
                 if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
-                    self.rect.x -= self.speed + 5
-                    self.target_x = target_x - 15
-                    self.target_y = target_y - 15
-            else:
+                    self.rect.x -= self.speed
+            elif min_value == (((target_x - self.rect.x) ** 2 + (target_y - self.rect.y + self.speed) ** 2) ** 0.5) and min_value not in self.last_moves:
+                self.rect.y -= self.speed
+                if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+                    self.rect.y += self.speed
+            elif min_value == (((target_x - self.rect.x) ** 2 + (target_y - self.rect.y - self.speed) ** 2) ** 0.5) and min_value not in self.last_moves:
+                self.rect.y += self.speed
+                if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+                    self.rect.y -= self.speed
+        elif player_direction == 'left':
+            if min_value == (((target_x - self.rect.x + self.speed) ** 2 + (target_y - self.rect.y) ** 2) ** 0.5) and min_value not in self.last_moves:
                 self.rect.x -= self.speed
                 if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
-                    self.rect.x += self.speed + 5
-                    self.target_x = target_x - 15
-                    self.target_y = target_y - 15
-
-        else:
-            if abs(self.rect.centery - self.target_y) > self.speed:
-                if self.rect.centery < self.target_y:
+                    self.rect.x += self.speed
+            elif min_value == (((target_x - self.rect.x) ** 2 + (target_y - self.rect.y + self.speed) ** 2) ** 0.5) and min_value not in self.last_moves:
+                self.rect.y -= self.speed
+                if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
                     self.rect.y += self.speed
-                    if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
-                        self.rect.y -= self.speed + 5
-                        self.target_x = target_x - 15
-                        self.target_y = target_y - 15
-                else:
+            elif min_value == (((target_x - self.rect.x) ** 2 + (target_y - self.rect.y - self.speed) ** 2) ** 0.5) and min_value not in self.last_moves:
+                self.rect.y += self.speed
+                if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
                     self.rect.y -= self.speed
-                    if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
-                        self.rect.y += self.speed + 5
-                        self.target_x = target_x - 15
-                        self.target_y = target_y - 15
-            else:
-                self.target_x = None
-                self.target_y = None
+        elif player_direction == 'jump':
+            if min_value == (((target_x - self.rect.x + self.speed) ** 2 + (target_y - self.rect.y) ** 2) ** 0.5) and min_value not in self.last_moves:
+                self.rect.x -= self.speed
+                if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+                    self.rect.x += self.speed
+            elif min_value == (((target_x - self.rect.x - self.speed) ** 2 + (target_y - self.rect.y) ** 2) ** 0.5) and min_value not in self.last_moves:
+                self.rect.x += self.speed
+                if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+                    self.rect.x -= self.speed
+            elif min_value == (((target_x - self.rect.x) ** 2 + (target_y - self.rect.y + self.speed) ** 2) ** 0.5) and min_value not in self.last_moves:
+                self.rect.y -= self.speed
+                if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+                    self.rect.y += self.speed
+        elif player_direction == 'down':
+            if min_value == (((target_x - self.rect.x) ** 2 + (target_y - self.rect.y - self.speed) ** 2) ** 0.5) and min_value not in self.last_moves:
+                self.rect.y += self.speed
+                if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+                    self.rect.y -= self.speed
+            elif min_value == (((target_x - self.rect.x + self.speed) ** 2 + (target_y - self.rect.y) ** 2) ** 0.5) and min_value not in self.last_moves:
+                self.rect.x -= self.speed
+                if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+                    self.rect.x += self.speed
+            elif min_value == (((target_x - self.rect.x - self.speed) ** 2 + (target_y - self.rect.y) ** 2) ** 0.5) and min_value not in self.last_moves:
+                self.rect.x += self.speed
+                if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+                    self.rect.x -= self.speed
+        self.last_moves.append(min_value)
+        if pygame.sprite.spritecollideany(self, player_group):
+            print('game over')
 
 
 class Player(pygame.sprite.Sprite):
@@ -167,7 +230,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect().move(
             tile_width * pos_x + 15, tile_height * pos_y + 10 + self.gravity)
         self.jumpCount = 0
-        self.speed = 5
+        self.speed = 4
         self.ammo_count = 0
         self.x = self.rect.x
         self.y = self.rect.y
@@ -365,12 +428,12 @@ def game_main():
     player, level_x, level_y = generate_level(load_level('levels_data/level1_data'))
     redghost, level_x, level_y = generate_ghost(load_level('levels_data/level1_data'))
     screen.fill((0, 0, 0))
+    last_direction = ''
     while True:
         clock.tick(FPS)
         player.diamond_pick_up()
         player.ammo_pick_up()
         target_x, target_y = player.get_position()
-        redghost.move_towards(target_x, target_y)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
@@ -378,13 +441,19 @@ def game_main():
         # Управление на WASD
         if keys[pygame.K_a]:
             player.move('left')
+            last_direction = 'left'
         if keys[pygame.K_d]:
             player.move('right')
+            last_direction = 'right'
         if keys[pygame.K_SPACE]:
             player.move('jump')
+            last_direction = 'jump'
         if keys[pygame.K_s]:
             player.move('down')
-            pygame.mouse.set_visible(False)
+            last_direction = 'down'
+            print(last_direction)
+            # pygame.mouse.set_visible(False)
+        redghost.move_towards(target_x, target_y, last_direction)
         player.gravitation()
         # Обновление
         all_sprites.update()
