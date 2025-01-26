@@ -87,11 +87,19 @@ def draw_cheats(screen):
     screen.fill((1, 1, 20))
     font = pygame.font.Font('assets/fonts/title.ttf', 100)
     text = font.render("Cheats", True, (255, 255, 0))
-    text_x = width // 2 - text.get_width() // 2 - 50
+    text_x = width // 2 - text.get_width() // 2
     text_y = height // 2 - text.get_height() // 2 - height * 0.33
     screen.blit(text, (text_x, text_y))
     text_w = text.get_width()
     text_h = text.get_height()
+
+    font1 = pygame.font.Font('assets/fonts/title.ttf', 50)
+    text1 = font1.render("Dis Ghost", True, (255, 255, 0))
+    text_x1 = width // 2 - text1.get_width() // 2 - 500
+    text_y1 = height // 2 - text1.get_height() // 2 - height * 0.33 + 150
+    screen.blit(text1, (text_x1, text_y1))
+    text_w = text1.get_width()
+    text_h = text1.get_height()
 
 coord_balls = [0, 200, 400, 600]
 running = True
@@ -197,6 +205,7 @@ while running:
                     running = False
     if cheatc:
         draw_cheats(screen)
+
         print(14)
 
     pygame.display.flip()
