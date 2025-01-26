@@ -118,6 +118,7 @@ stngs = False
 cheatc = False
 cheat_code_flag = False
 switchermus = itertools.cycle(['Black', 'Gray'])
+switchercheats_ad = itertools.cycle(['On', 'Off'])
 while running:
     # Получаем события из очереди событий
     for event in pygame.event.get():
@@ -216,13 +217,14 @@ while running:
         surf_cheat_code_dis.blit(text_cheat_code_dis, rect_cheat_code_dis)
         screen.blit(surf_cheat_code_dis, (cheat_code_dis_button_rect.x, cheat_code_dis_button_rect.y))
         for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if cheat_code_dis_button_rect.collidepoint(event.pos):
-                    print(1)
+                    surf_cheat_code_dis, rect_cheat_code_dis, text_cheat_code_dis = button_maker(next(switchercheats_ad), 150, 50, 60)
                 elif quit_button_rect.collidepoint(event.pos):
                     sound_click.play()
                     surf_cheat_code_dis
                     running = False
-
 
     pygame.display.flip()
