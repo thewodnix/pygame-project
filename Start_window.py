@@ -73,11 +73,21 @@ def start_window_draw(screen):
     pygame.draw.rect(screen, (255, 255, 0), (text_x - 10, text_y - 10,
                                              text_w + 20, text_h + 20), 1)
 
-def draw(screen):
+def draw_stngs(screen):
     screen.fill((1, 1, 20))
     font = pygame.font.Font('assets/fonts/title.ttf', 200)
     text = font.render("Settings", True, (255, 255, 0))
     text_x = width // 2 - text.get_width() // 2
+    text_y = height // 2 - text.get_height() // 2 - height * 0.33
+    screen.blit(text, (text_x, text_y))
+    text_w = text.get_width()
+    text_h = text.get_height()
+
+def draw_cheats(screen):
+    screen.fill((1, 1, 20))
+    font = pygame.font.Font('assets/fonts/title.ttf', 100)
+    text = font.render("Cheats", True, (255, 255, 0))
+    text_x = width // 2 - text.get_width() // 2 - 50
     text_y = height // 2 - text.get_height() // 2 - height * 0.33
     screen.blit(text, (text_x, text_y))
     text_w = text.get_width()
@@ -108,7 +118,7 @@ while running:
                     sound_click.play()
                     menu = False
                     cheatc = True
-                    # clear_window()
+                    clear_window()
                     print('cheat')
                 if play_button_rect.collidepoint(event.pos):
                     sound_click.play()
@@ -119,7 +129,7 @@ while running:
                     clear_window()
                     sound_click.play()
                     menu = False
-                    draw(screen)
+                    draw_stngs(screen)
                     stngs = True
                     print(2)
                 elif quit_button_rect.collidepoint(event.pos):
@@ -186,6 +196,7 @@ while running:
                     sound_click.play()
                     running = False
     if cheatc:
+        draw_cheats(screen)
         print(14)
 
     pygame.display.flip()
