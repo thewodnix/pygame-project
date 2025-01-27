@@ -1,7 +1,6 @@
 import pygame
 import sys
 import os
-import numpy as np
 
 pygame.init()
 # размеры окна:
@@ -60,10 +59,56 @@ redghost_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/r
 
 
 class Bullet(pygame.sprite.Sprite):
-    def __init__(self, pos_x, pos_y):
-        super().__init__(all_sprites, ammo_group)
-        self.image = ammo_image
-        self.rect = self.image.get_rect().move(pos_x, pos_y)
+    def __init__(self, pos_x, pos_y, direction):
+        super().__init__(bullet_group, all_sprites)
+        self.pos_x = pos_x
+        self.pos_y = pos_y
+        self.speed = 2
+        self.image = pygame.transform.scale(load_image(f'photo_data/Game_photo_data/bullet_{direction}.png', 'White'),
+                                            (30, 30))
+        self.rect = self.image.get_rect().move(self.pos_x, self.pos_y)
+        self.direction = direction
+        print(ghost_group)
+        self.gun_shot_maker()
+
+    def gun_shot_maker(self):
+        if self.direction == 'right':
+            for n in range(80):
+                if n <= 40:
+                    self.rect.x += self.speed
+                    if pygame.sprite.spritecollideany(self, tiles_pac_group):
+                        self.rect.x -= self.speed
+                        break
+        elif self.direction == 'left':
+            for n in range(80):
+                if n <= 40:
+                    self.rect.x -= self.speed
+                    if pygame.sprite.spritecollideany(self, tiles_pac_group):
+                        self.rect.x += self.speed
+                        break
+        elif self.direction == 'down':
+            for n in range(80):
+                if n <= 40:
+                    self.rect.y += self.speed
+                    if pygame.sprite.spritecollideany(self, tiles_pac_group):
+                        self.rect.y -= self.speed
+                        break
+        elif self.direction == 'up':
+            for n in range(80):
+                if n <= 40:
+                    self.rect.y -= self.speed
+                    if pygame.sprite.spritecollideany(self, tiles_pac_group):
+                        self.rect.y += self.speed
+                        break
+                    elif pygame.sprite.spritecollideany(self, ghost_group):
+                        for g in ghost_group:
+                            if pygame.sprite.spritecollideany(g, bullet_group):
+                                g.kill()
+                                break
+                        break
+
+        # for b_s in bullet_group:
+        #     b_s.kill()
 
 
 class Ammo(pygame.sprite.Sprite):
@@ -130,12 +175,15 @@ class RedGhost(pygame.sprite.Sprite):
         self.cell_size = 50
         self.target_x = 0
         self.target_y = 0
+        self.alive = True
 
     def get_position(self):
         return self.rect.x, self.rect.y
 
+    def is_alive(self):
+        print()
+
     def move_towards(self, target_x, target_y, player_direction):
-        print(player_direction)
         target_ways = []
         self.rect.x += self.speed
         if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
@@ -248,18 +296,11 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect().move(
             tile_width * pos_x + 15, tile_height * pos_y + 10 + self.gravity)
         self.jumpCount = 0
-        self.speed = 4
+        self.speed = 8
         self.ammo_count = 0
         self.x = self.rect.x
         self.y = self.rect.y
 
-    def gun_shot_maker(self):
-        x = self.rect.x
-        while not pygame.sprite.spritecollideany(self, tiles_pac_group) or x <= 200:
-            if pygame.sprite.spritecollideany(self, ghost_group):
-                break
-            Bullet(x, self.rect.y)
-            x += self.speed
     def get_position(self):
         return self.rect.x, self.rect.y
 
@@ -268,13 +309,17 @@ class Player(pygame.sprite.Sprite):
         if pygame.sprite.spritecollideany(self, tiles_pac_group):
             self.rect.y -= self.gravity
 
-    def move(self, pos):
+    def move(self, pos, direction):
         if pos == 'left':
             self.rect.x -= self.speed
             if pygame.sprite.spritecollideany(self, tiles_pac_group):
                 self.rect.x += self.speed
         elif pos == 'shot':
-            self.gun_shot_maker()
+            if self.ammo_count:
+                Bullet(self.rect.x, self.rect.y, direction)
+                self.ammo_count -= 1
+            else:
+                print('zero ammo')
         elif pos == 'jump':
             for i in range(20):  # Delay the falling down as loops are very fast
                 if i <= 10:
@@ -371,6 +416,7 @@ player = None
 # призраки
 redghost = None
 
+bullet_group = pygame.sprite.Group()
 ammo_group = pygame.sprite.Group()
 all_sprites = pygame.sprite.Group()
 diamond_group = pygame.sprite.Group()
@@ -463,22 +509,29 @@ def game_main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    player.move('shot', 'up')
+                elif event.key == pygame.K_DOWN:
+                    player.move('shot', 'down')
+                elif event.key == pygame.K_RIGHT:
+                    player.move('shot', 'right')
+                elif event.key == pygame.K_LEFT:
+                    player.move('shot', 'left')
         keys = pygame.key.get_pressed()
         # Управление на WASD
         if keys[pygame.K_a]:
-            player.move('left')
+            player.move('left', 'pass')
             last_direction = 'left'
         if keys[pygame.K_d]:
-            player.move('right')
+            player.move('right', 'pass')
             last_direction = 'right'
         if keys[pygame.K_SPACE]:
-            player.move('jump')
+            player.move('jump', 'pass')
             last_direction = 'jump'
         if keys[pygame.K_s]:
-            player.move('down')
+            player.move('down', 'pass')
             last_direction = 'down'
-        if keys[pygame.K_e]:
-            player.move('shot')
             # pygame.mouse.set_visible(False)
         redghost.move_towards(target_x, target_y, last_direction)
         player.gravitation()
