@@ -60,6 +60,9 @@ surf_cheat_code, rect_cheat_code, text_cheat_code = button_maker('Cheat', 150, 5
 cheat_code_dis_button_rect = pygame.Rect(450, 265, 300, 100)
 surf_cheat_code_dis, rect_cheat_code_dis, text_cheat_code_dis = button_maker('On', 150, 50, 60)
 
+cheat_code_dis_col_rect = pygame.Rect(450, 365, 300, 100)
+surf_cheat_code_col, rect_cheat_code_col, text_cheat_code_col = button_maker('On', 150, 50, 60)
+
 
 def start_window_draw(screen):
     screen.fill((1, 1, 20))
@@ -108,6 +111,14 @@ def draw_cheats(screen):
     text_w = text1.get_width()
     text_h = text1.get_height()
 
+    font2 = pygame.font.Font('assets/fonts/title.ttf', 50)
+    text2 = font2.render("immortal", True, (255, 255, 0))
+    text_x2 = width // 2 - text1.get_width() // 2 - 500
+    text_y2 = height // 2 - text1.get_height() // 2 - height * 0.33 + 250
+    screen.blit(text2, (text_x2, text_y2))
+    text_w = text1.get_width()
+    text_h = text1.get_height()
+
 
 coord_balls = [0, 200, 400, 600]
 running = True
@@ -119,6 +130,7 @@ cheatc = False
 cheat_code_flag = False
 switchermus = itertools.cycle(['Black', 'Gray'])
 switchercheats_ad = itertools.cycle(['On', 'Off'])
+switchercheats_ad1 = itertools.cycle(['On', 'Off'])
 while running:
     # Получаем события из очереди событий
     for event in pygame.event.get():
@@ -216,12 +228,16 @@ while running:
         draw_cheats(screen)
         surf_cheat_code_dis.blit(text_cheat_code_dis, rect_cheat_code_dis)
         screen.blit(surf_cheat_code_dis, (cheat_code_dis_button_rect.x, cheat_code_dis_button_rect.y))
+        surf_cheat_code_col.blit(text_cheat_code_col, rect_cheat_code_col)
+        screen.blit(surf_cheat_code_col,(cheat_code_dis_col_rect.x, cheat_code_dis_col_rect.y))
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if cheat_code_dis_button_rect.collidepoint(event.pos):
                     surf_cheat_code_dis, rect_cheat_code_dis, text_cheat_code_dis = button_maker(next(switchercheats_ad), 150, 50, 60)
+                if cheat_code_dis_col_rect.collidepoint(event.pos):
+                    surf_cheat_code_col, rect_cheat_code_col, text_cheat_code_col = button_maker(next(switchercheats_ad1), 150, 50, 60)
                 elif quit_button_rect.collidepoint(event.pos):
                     sound_click.play()
                     surf_cheat_code_dis
