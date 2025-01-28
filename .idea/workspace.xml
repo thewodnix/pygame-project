@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment="Add bullet">
-      <change afterPath="$PROJECT_DIR$/photo_data/Game_photo_data/bullet_down.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/photo_data/Game_photo_data/bullet_left.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/photo_data/Game_photo_data/bullet_right.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/photo_data/Game_photo_data/bullet_up.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/pygame-project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pygame-project.iml" afterDir="false" />
+    <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment="Started making red ghost">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_21_01_2025_15_32_[Changes]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_21_01_2025_15_32__Changes_.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/level_attempt.py" beforeDir="false" afterPath="$PROJECT_DIR$/level_attempt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels_data/level1_data" beforeDir="false" afterPath="$PROJECT_DIR$/levels_data/level1_data" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,18 +54,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.Start_window.executor": "Run",
-    "Python.first_level.executor": "Run",
-    "Python.level_attempt.executor": "Run",
-    "Python.load_sprites.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Dev-level",
-    "last_opened_file_path": "C:/PycharmProjects/pygame-project/photo_data/Game_photo_data"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Start_window.executor&quot;: &quot;Run&quot;,
+    &quot;Python.first_level.executor&quot;: &quot;Run&quot;,
+    &quot;Python.level_attempt.executor&quot;: &quot;Run&quot;,
+    &quot;Python.load_sprites.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Dev-level&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/PycharmProjects/pygame-project/photo_data/Game_photo_data&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\PycharmProjects\pygame-project\photo_data\Game_photo_data" />
@@ -87,6 +85,7 @@
   <component name="RunManager" selected="Python.level_attempt">
     <configuration name="Start_window" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pygame-project" />
+      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -108,13 +107,13 @@
     </configuration>
     <configuration name="jump_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pygame-project" />
+      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.10 (pythonProject)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -130,6 +129,7 @@
     </configuration>
     <configuration name="just_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pygame-project" />
+      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -151,13 +151,13 @@
     </configuration>
     <configuration name="level_attempt" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pygame-project" />
+      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="SDK_NAME" value="Python 3.10 (pythonProject)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -302,6 +302,7 @@
     <MESSAGE value="Add pick up items, sound of this action, gravity, jump" />
     <MESSAGE value="Tried to make an ai" />
     <MESSAGE value="Add bullet" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add bullet" />
+    <MESSAGE value="Started making red ghost" />
+    <option name="LAST_COMMIT_MESSAGE" value="Started making red ghost" />
   </component>
 </project>
