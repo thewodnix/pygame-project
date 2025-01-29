@@ -71,7 +71,7 @@ class Bullet(pygame.sprite.Sprite):
         super().__init__(bullet_group, all_sprites)
         self.pos_x = pos_x
         self.pos_y = pos_y
-        self.speed = 2
+        self.speed = 5
         self.image = pygame.transform.scale(load_image(f'photo_data/Game_photo_data/bullet_{direction}.png', 'White'),
                                             (30, 30))
         self.rect = self.image.get_rect().move(self.pos_x, self.pos_y)
@@ -79,50 +79,65 @@ class Bullet(pygame.sprite.Sprite):
         self.gun_shot_maker()
 
     def gun_shot_maker(self):
-        if self.direction == 'right':
-            for n in range(80):
-                if n <= 40:
-                    self.rect.x += self.speed
-                    if pygame.sprite.spritecollideany(self, tiles_pac_group):
-                        self.rect.x -= self.speed
-                        break
-                    elif pygame.sprite.spritecollideany(self, ghost_group):
-                        for g in ghost_group:
-                            if pygame.sprite.spritecollideany(g, bullet_group):
-                                print(11111111111111111111111111111111111111111111111111111111111111111)
-        elif self.direction == 'left':
-            for n in range(80):
-                if n <= 40:
+        while True:
+            if self.direction == 'right':
+                self.rect.x += self.speed
+                if pygame.sprite.spritecollideany(self, tiles_pac_group):
                     self.rect.x -= self.speed
-                    if pygame.sprite.spritecollideany(self, tiles_pac_group):
-                        self.rect.x += self.speed
-                        break
-                    elif pygame.sprite.spritecollideany(self, ghost_group):
-                        for g in ghost_group:
-                            if pygame.sprite.spritecollideany(g, bullet_group):
-                                print(11111111111111111111111111111111111111111111111111111111111111111)
-        elif self.direction == 'down':
-            for n in range(80):
-                if n <= 40:
-                    self.rect.y += self.speed
-                    if pygame.sprite.spritecollideany(self, tiles_pac_group):
-                        self.rect.y -= self.speed
-                        break
-                    elif pygame.sprite.spritecollideany(self, ghost_group):
-                        for g in ghost_group:
-                            if pygame.sprite.spritecollideany(g, bullet_group):
-                                print(11111111111111111111111111111111111111111111111111111111111111111)
-        elif self.direction == 'up':
-            for n in range(80):
-                if n <= 40:
+                    break
+                collided_ghost = pygame.sprite.spritecollideany(self, ghost_group)
+                if collided_ghost:
+                    collided_ghost.death()  # Удаляем призрака
+                    self.kill()  # Удаляем пулю
+                    break
+                if self.rect.x > width:  # Выход за пределы экрана
+                    self.kill()  # Удаляем пулю
+                    break
+
+            elif self.direction == 'left':
+                self.rect.x -= self.speed
+                if pygame.sprite.spritecollideany(self, tiles_pac_group):
+                    self.rect.x += self.speed
+                    break
+                collided_ghost = pygame.sprite.spritecollideany(self, ghost_group)
+                if collided_ghost:
+                    collided_ghost.death()  # Удаляем призрака
+                    self.kill()  # Удаляем пулю
+                    break
+                if self.rect.x < 0:  # Выход за пределы экрана
+                    self.kill()  # Удаляем пулю
+                    break
+
+            elif self.direction == 'down':
+                self.rect.y += self.speed
+                if pygame.sprite.spritecollideany(self, tiles_pac_group):
                     self.rect.y -= self.speed
-                    if pygame.sprite.spritecollideany(self, tiles_pac_group):
-                        self.rect.y += self.speed
-                        break
-                    elif pygame.sprite.spritecollideany(self, ghost_group):
-                        for g in ghost_group:
-                            if pygame.sprite.spritecollideany(g, bullet_group):
-                                print(1)
+                    break
+                collided_ghost = pygame.sprite.spritecollideany(self, ghost_group)
+                if collided_ghost:
+                    collided_ghost.death()
+                    self.kill()
+                    break
+                if self.rect.y > height:
+                    self.kill()
+                    break
+
+            elif self.direction == 'up':
+                self.rect.y -= self.speed
+                if pygame.sprite.spritecollideany(self, tiles_pac_group):
+                    self.rect.y += self.speed
+                    break
+                collided_ghost = pygame.sprite.spritecollideany(self, ghost_group)
+                if collided_ghost:
+                    collided_ghost.death()  # Удаляем призрака
+                    self.kill()  # Удаляем пулю
+                    break
+                if self.rect.y < 0:  # Выход за пределы экрана
+                    self.kill()  # Удаляем пулю
+                    break
+
+
+
 
         # for b_s in bullet_group:
         #     b_s.kill()
@@ -197,11 +212,12 @@ class RedGhost(pygame.sprite.Sprite):
         return self.rect.x, self.rect.y
 
     def is_alive(self):
-        pass
+        return self.alive
 
     def death(self):
-        self.rect.x += 1000
-
+        self.alive = False  # Обозначаем, что призрак мертв
+        self.rect.x += 1000  # Сдвигаем призрака за пределы экрана или удаляем его
+        self.kill()
     def move_towards(self, target_x, target_y, player_direction):
         target_ways = []
         self.rect.x += self.speed
