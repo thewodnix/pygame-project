@@ -59,12 +59,14 @@ tile_images = {
 player_image = load_image('photo_data/photo_menu_data/Pac_manModel3.png', 'White')
 redghost_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/red.png'), (32, 32))
 
+
 class Crossroads(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y):
         super().__init__(all_sprites, crossroads_group)
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
+
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, direction):
@@ -136,11 +138,9 @@ class Bullet(pygame.sprite.Sprite):
                     self.kill()  # Удаляем пулю
                     break
 
-
-
-
         # for b_s in bullet_group:
         #     b_s.kill()
+
 
 class Ammo(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
@@ -215,9 +215,9 @@ class RedGhost(pygame.sprite.Sprite):
         return self.alive
 
     def death(self):
-        self.alive = False  # Обозначаем, что призрак мертв
-        self.rect.x += 1000  # Сдвигаем призрака за пределы экрана или удаляем его
+        self.alive = False
         self.kill()
+
     def move_towards(self, target_x, target_y, player_direction):
         target_ways = []
         self.rect.x += self.speed
@@ -321,7 +321,6 @@ class RedGhost(pygame.sprite.Sprite):
                     self.rect.x -= self.speed
         '''if pygame.sprite.spritecollideany(self, player_group):
             print('game over')'''
-
 
 
 class Player(pygame.sprite.Sprite):
@@ -533,6 +532,7 @@ def start_screen():
                 return  # начинаем игру
         pygame.display.flip()
         clock.tick(FPS)
+
 
 def game_main():
     player, level_x, level_y = generate_level(load_level('levels_data/level1_data'))
