@@ -59,12 +59,14 @@ tile_images = {
 player_image = load_image('photo_data/photo_menu_data/Pac_manModel3.png', 'White')
 redghost_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/red.png'), (32, 32))
 
+
 class Crossroads(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y):
         super().__init__(all_sprites, crossroads_group)
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(
             tile_width * pos_x, tile_height * pos_y)
+
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y, direction):
@@ -210,32 +212,44 @@ class RedGhost(pygame.sprite.Sprite):
         print(x, y)
         if self.dir == 'right' and pygame.sprite.spritecollideany(self, crossroads_group):
             if self.possible_moves(x, y - self.speed):
-                target_ways.append(((((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5), 'up'))
+                target_ways.append(
+                    ((((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5), 'up'))
             if self.possible_moves(x, y + self.speed):
-                target_ways.append(((((self.rect.x - target_x) ** 2 + (self.rect.y - target_y + self.speed) ** 2) ** 0.5), 'down'))
-            if self.possible_moves(x  + self.speed, y):
-                target_ways.append(((((self.rect.x - target_x + self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'right'))
+                target_ways.append(
+                    ((((self.rect.x - target_x) ** 2 + (self.rect.y - target_y + self.speed) ** 2) ** 0.5), 'down'))
+            if self.possible_moves(x + self.speed, y):
+                target_ways.append(
+                    ((((self.rect.x - target_x + self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'right'))
         if self.dir == 'left' and pygame.sprite.spritecollideany(self, crossroads_group):
             if self.possible_moves(x, y - self.speed):
-                target_ways.append(((((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5), 'up'))
+                target_ways.append(
+                    ((((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5), 'up'))
             if self.possible_moves(x, y + self.speed):
-                target_ways.append(((((self.rect.x - target_x) ** 2 + (self.rect.y - target_y + self.speed) ** 2) ** 0.5), 'down'))
-            if self.possible_moves(x  - self.speed, y):
-                target_ways.append(((((self.rect.x - target_x - self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'left'))
+                target_ways.append(
+                    ((((self.rect.x - target_x) ** 2 + (self.rect.y - target_y + self.speed) ** 2) ** 0.5), 'down'))
+            if self.possible_moves(x - self.speed, y):
+                target_ways.append(
+                    ((((self.rect.x - target_x - self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'left'))
         if self.dir == 'down' and pygame.sprite.spritecollideany(self, crossroads_group):
             if self.possible_moves(x, y + self.speed):
-                target_ways.append(((((self.rect.x - target_x) ** 2 + (self.rect.y - target_y + self.speed) ** 2) ** 0.5), 'down'))
-            if self.possible_moves(x  + self.speed, y):
-                target_ways.append(((((self.rect.x - target_x + self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'right'))
-            if self.possible_moves(x  - self.speed, y):
-                target_ways.append(((((self.rect.x - target_x - self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'left'))
+                target_ways.append(
+                    ((((self.rect.x - target_x) ** 2 + (self.rect.y - target_y + self.speed) ** 2) ** 0.5), 'down'))
+            if self.possible_moves(x + self.speed, y):
+                target_ways.append(
+                    ((((self.rect.x - target_x + self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'right'))
+            if self.possible_moves(x - self.speed, y):
+                target_ways.append(
+                    ((((self.rect.x - target_x - self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'left'))
         if self.dir == 'up' and pygame.sprite.spritecollideany(self, crossroads_group):
             if self.possible_moves(x, y - self.speed):
-                target_ways.append(((((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5), 'up'))
-            if self.possible_moves(x  + self.speed, y):
-                target_ways.append(((((self.rect.x - target_x + self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'right'))
-            if self.possible_moves(x  - self.speed, y):
-                target_ways.append(((((self.rect.x - target_x - self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'left'))
+                target_ways.append(
+                    ((((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5), 'up'))
+            if self.possible_moves(x + self.speed, y):
+                target_ways.append(
+                    ((((self.rect.x - target_x + self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'right'))
+            if self.possible_moves(x - self.speed, y):
+                target_ways.append(
+                    ((((self.rect.x - target_x - self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'left'))
         print(target_ways)
         if pygame.sprite.spritecollideany(self, crossroads_group) and self.move_possibility:
             self.count_attempts += 1
