@@ -10,10 +10,62 @@ tile_width = tile_height = 50
 size = width, height = tile_width * 20, tile_height * 11
 # screen — холст, на котором нужно рисовать:
 screen = pygame.display.set_mode(size)
+sound_click = pygame.mixer.Sound('music_data/music_menu_data/click_sound.mp3')
 clock = pygame.time.Clock()
 pick_up = pygame.mixer.Sound('music_data/Game_sounds_data/pick_up_sound.mp3')
 pick_up_ammo = pygame.mixer.Sound('music_data/Game_sounds_data/pick_up_ammo_sound.mp3')
 shot_sound = pygame.mixer.Sound('music_data/Game_sounds_data/gun_shot.mp3')
+
+
+def clear_window():
+    screen.fill((1, 1, 21))
+    for i in all_sprites:
+        i.kill()
+
+
+restart_btn = pygame.Rect(width // 2 - width // 5, height // 2 - 50, 100, 100)
+
+
+def final_window(score, win_result):
+    clear_window()
+    image_restart = load_image('photo_data/Final_window_photos/play_again_photo.png', 'black')
+    image_restart_btn = pygame.transform.scale(image_restart, (200, 200))
+    image_menu = load_image('photo_data/Final_window_photos/menu.png', 'black')
+    image_menu_btn = pygame.transform.scale(image_menu, (200, 200))
+
+    restart_btn = pygame.Rect(width // 2 - 250, height // 2 - 100, 200, 200)
+    surf_restart = pygame.Surface((width, height))
+    menu_btn = pygame.Rect(width // 2 + 85, height // 2 - 100, 200, 200)
+    surf_menu = pygame.Surface((width, height))
+    font_res = pygame.font.Font(None, 65)
+    if not win_result:
+        text_res = font_res.render(f"You lost!", True, (255, 255, 0))
+    else:
+        text_res = font_res.render(f"Congratulations! You won", True, (255, 255, 0))
+    text_res_x = width // 2 - text_res.get_width() // 2
+    text_res_y = height // 2 - text_res.get_height() // 2 - height * 0.33
+    font = pygame.font.Font(None, 45)
+    text = font.render(f"You collected {score} points", True, (255, 255, 0))
+    text_x = width // 2 - text.get_width() // 2
+    text_y = height // 2 + text.get_height() // 2 + height * 0.33
+    running = True
+    while running:
+        for event in pygame.event.get():
+            screen.fill((1, 1, 21))
+            if event.type == pygame.QUIT:
+                running = False
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if restart_btn.collidepoint(event.pos):
+                    sound_click.play()
+                    game_main()
+                elif menu_btn.collidepoint(event.pos):
+                    sound_click.play()
+                    print('menu')
+        screen.blit(text_res, (text_res_x, text_res_y))
+        screen.blit(text, (text_x, text_y))
+        screen.blit(image_restart_btn, (width // 2 - 250, height // 2 - 100, 200, 200))
+        screen.blit(image_menu_btn, (width // 2 + 85, height // 2 - 100, 200, 200))
+        pygame.display.flip()
 
 
 def load_level(filename):
@@ -73,49 +125,76 @@ class Bullet(pygame.sprite.Sprite):
         super().__init__(bullet_group, all_sprites)
         self.pos_x = pos_x
         self.pos_y = pos_y
-        self.speed = 2
+        self.score = 0
+        self.speed = 5
         self.image = pygame.transform.scale(load_image(f'photo_data/Game_photo_data/bullet_{direction}.png', 'White'),
                                             (30, 30))
         self.rect = self.image.get_rect().move(self.pos_x, self.pos_y)
         self.direction = direction
-        print(ghost_group)
         self.gun_shot_maker()
 
     def gun_shot_maker(self):
-        if self.direction == 'right':
-            for n in range(80):
-                if n <= 40:
-                    self.rect.x += self.speed
-                    if pygame.sprite.spritecollideany(self, tiles_pac_group):
-                        self.rect.x -= self.speed
-                        break
-        elif self.direction == 'left':
-            for n in range(80):
-                if n <= 40:
+        while True:
+            if self.direction == 'right':
+                self.rect.x += self.speed
+                if pygame.sprite.spritecollideany(self, tiles_pac_group):
                     self.rect.x -= self.speed
-                    if pygame.sprite.spritecollideany(self, tiles_pac_group):
-                        self.rect.x += self.speed
-                        break
-        elif self.direction == 'down':
-            for n in range(80):
-                if n <= 40:
-                    self.rect.y += self.speed
-                    if pygame.sprite.spritecollideany(self, tiles_pac_group):
-                        self.rect.y -= self.speed
-                        break
-        elif self.direction == 'up':
-            for n in range(80):
-                if n <= 40:
+                    break
+                collided_ghost = pygame.sprite.spritecollideany(self, ghost_group)
+                if collided_ghost:
+                    collided_ghost.is_alive()  # Удаляем призрака
+                    self.score += 250
+                    self.kill()  # Удаляем пулю
+                    break
+                if self.rect.x > width:  # Выход за пределы экрана
+                    self.kill()  # Удаляем пулю
+                    break
+
+            elif self.direction == 'left':
+                self.rect.x -= self.speed
+                if pygame.sprite.spritecollideany(self, tiles_pac_group):
+                    self.rect.x += self.speed
+                    break
+                collided_ghost = pygame.sprite.spritecollideany(self, ghost_group)
+                if collided_ghost:
+                    collided_ghost.is_alive()  # Удаляем призрака
+                    self.score += 250
+                    self.kill()  # Удаляем пулю
+                    break
+                if self.rect.x < 0:  # Выход за пределы экрана
+                    self.kill()  # Удаляем пулю
+                    break
+
+            elif self.direction == 'down':
+                self.rect.y += self.speed
+                if pygame.sprite.spritecollideany(self, tiles_pac_group):
                     self.rect.y -= self.speed
-                    if pygame.sprite.spritecollideany(self, tiles_pac_group):
-                        self.rect.y += self.speed
-                        break
-                    elif pygame.sprite.spritecollideany(self, ghost_group):
-                        for g in ghost_group:
-                            if pygame.sprite.spritecollideany(g, bullet_group):
-                                g.kill()
-                                break
-                        break
+                    break
+                collided_ghost = pygame.sprite.spritecollideany(self, ghost_group)
+                if collided_ghost:
+                    collided_ghost.is_alive()
+                    self.score += 250
+                    self.kill()
+                    break
+                if self.rect.y > height:
+                    self.kill()
+                    break
+
+            elif self.direction == 'up':
+                self.rect.y -= self.speed
+                if pygame.sprite.spritecollideany(self, tiles_pac_group):
+                    self.rect.y += self.speed
+                    break
+                collided_ghost = pygame.sprite.spritecollideany(self, ghost_group)
+                if collided_ghost:
+                    collided_ghost.is_alive()  # Удаляем призрака
+                    self.score += 250
+                    self.kill()  # Удаляем пулю
+                    break
+                if self.rect.y < 0:  # Выход за пределы экрана
+                    self.kill()  # Удаляем пулю
+                    break
+        return self.score
 
         # for b_s in bullet_group:
         #     b_s.kill()
@@ -164,16 +243,6 @@ class Ground(pygame.sprite.Sprite):
             tile_width * pos_x, tile_height * pos_y)
 
 
-# class Pathfinder:
-#     def __init__(self, in_arr):
-#         cost = np.array(in_arr, dtype=np.bool_).tolist()
-#         self.pf = tcod.path.AStar(cost=cost, diagonal=0)
-#
-#     def get_path(self, from_x, from_y, to_x, to_y):
-#         res = self.pf.get_path(from_x, from_y, to_x, to_y)
-#         return [(s[1], s[0]) for s in res]
-
-
 class RedGhost(pygame.sprite.Sprite):
     def __init__(self, x_pos, y_pos):
         super().__init__(ghost_group, all_sprites)
@@ -181,7 +250,7 @@ class RedGhost(pygame.sprite.Sprite):
         self.rect = self.image.get_rect().move(
             tile_width * x_pos + 15, tile_height * y_pos + 5)
         self.speed = 4
-        self.dir = choice(['right'])
+        self.dir = choice(['right', 'left'])
         self.cell_size = 50
         self.target_x = 0
         self.target_y = 0
@@ -193,13 +262,12 @@ class RedGhost(pygame.sprite.Sprite):
         return self.rect.x, self.rect.y
 
     def is_alive(self):
-        print()
+        self.alive = False
+        self.kill()
 
     def possible_moves(self, *coord) -> bool:
         x, y = self.rect.x, self.rect.y
-        print(self.rect.x, self.rect.y, 'suagi23556')
         self.rect.x, self.rect.y = coord
-        print(self.rect.x, self.rect.y, 'suagil')
         if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
             self.rect.x, self.rect.y = x, y
             return False
@@ -207,9 +275,9 @@ class RedGhost(pygame.sprite.Sprite):
         return True
 
     def move_towards(self, target_x, target_y):
+        self.target_reached()
         target_ways = []
         x, y = self.rect.x, self.rect.y
-        print(x, y)
         if self.dir == 'right' and pygame.sprite.spritecollideany(self, crossroads_group):
             if self.possible_moves(x, y - self.speed):
                 target_ways.append(
@@ -250,13 +318,11 @@ class RedGhost(pygame.sprite.Sprite):
             if self.possible_moves(x - self.speed, y):
                 target_ways.append(
                     ((((self.rect.x - target_x - self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'left'))
-        print(target_ways)
         if pygame.sprite.spritecollideany(self, crossroads_group) and self.move_possibility:
             self.count_attempts += 1
             if self.count_attempts == 10:
                 self.count_attempts = 0
                 self.dir = min(target_ways)[1]
-        print(self.dir)
         if self.dir == 'right' and self.possible_moves(x + self.speed, y):
             self.rect.x += self.speed
         elif self.dir == 'up' and self.possible_moves(x, y - self.speed):
@@ -266,29 +332,17 @@ class RedGhost(pygame.sprite.Sprite):
         elif self.dir == 'down' and self.possible_moves(x, y + self.speed):
             self.rect.y += self.speed
 
-        # elif self.dir == 'left':
-        #     target_ways['up'] = ((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5
-        #     target_ways['right'] = ((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5
-        #     target_ways['down'] = ((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5
-        # elif self.dir == 'down':
-        #     target_ways['up'] = ((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5
-        #     target_ways['right'] = ((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5
-        #     target_ways['down'] = ((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5
-        # elif self.dir == 'up':
-        #     target_ways['up'] = ((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5
-        #     target_ways['right'] = ((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5
-        #     target_ways['left'] = ((self.rect.x - target_x) ** 2 + (self.rect.y - target_y - self.speed) ** 2) ** 0.5
-        # if pygame.sprite.spritecollideany(self, crossroads_group):
-        #     min_value = min(target_ways)
-        #
-        # if pygame.sprite.spritecollideany(self, player_group):
-        #     print('game over')
+    def target_reached(self):
+        if self.alive:
+            if pygame.sprite.spritecollideany(self, player_group):
+                return True
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
         super().__init__(player_group, all_sprites)
         self.gravity = 4
+        self.score = 0
         self.image = player_image
         self.rect = self.image.get_rect().move(
             tile_width * pos_x + 15, tile_height * pos_y + 10 + self.gravity)
@@ -296,6 +350,7 @@ class Player(pygame.sprite.Sprite):
         self.speed = 8
         self.ammo_count = 0
         self.x = self.rect.x
+        self.win_result = False
         self.y = self.rect.y
 
     def get_position(self):
@@ -306,6 +361,10 @@ class Player(pygame.sprite.Sprite):
         if pygame.sprite.spritecollideany(self, tiles_pac_group):
             self.rect.y -= self.gravity
 
+    def win_checker(self):
+        if len(diamond_group) == 0:
+            self.win_result = True
+
     def move(self, pos, direction):
         if pos == 'left':
             self.rect.x -= self.speed
@@ -313,10 +372,11 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x += self.speed
         elif pos == 'shot':
             if self.ammo_count:
-                Bullet(self.rect.x, self.rect.y, direction)
+                bullet = Bullet(self.rect.x, self.rect.y, direction)
+                self.score += bullet.gun_shot_maker()
                 self.ammo_count -= 1
             else:
-                print('zero ammo')
+                pass
         elif pos == 'jump':
             for i in range(20):  # Delay the falling down as loops are very fast
                 if i <= 10:
@@ -336,8 +396,10 @@ class Player(pygame.sprite.Sprite):
         if pygame.sprite.spritecollideany(self, diamond_group):
             for i in diamond_group:
                 if pygame.sprite.spritecollideany(i, player_group):
+                    self.score += 5
                     pick_up.play()
                     i.kill()
+                    self.win_checker()
                     break
 
     def ammo_pick_up(self):
@@ -345,9 +407,15 @@ class Player(pygame.sprite.Sprite):
             for i in ammo_group:
                 if pygame.sprite.spritecollideany(i, player_group):
                     pick_up_ammo.play()
+                    self.score += 10
                     self.ammo_count += 1
                     i.kill()
                     break
+    def score_taker(self):
+        return self.score
+
+    def win_result_taker(self):
+        return self.win_result
         # for i in diamond_group: красиво удаляет кристаллы
         #     print(i.kill())
         #     break
@@ -500,11 +568,17 @@ def game_main():
     player, level_x, level_y = generate_level(load_level('levels_data/level1_data'))
     redghost, level_x, level_y = generate_ghost(load_level('levels_data/level1_data'))
     screen.fill((0, 0, 0))
-    last_direction = ''
+    result = None
+    total_score = 0
     while True:
+        total_score = player.score_taker()
         clock.tick(FPS)
         player.diamond_pick_up()
         player.ammo_pick_up()
+        result = player.win_result_taker()
+        if redghost.target_reached() or result is True:
+            final_window(total_score, result)
+            terminate()
         target_x, target_y = player.get_position()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -547,6 +621,3 @@ def game_main():
 
 # start_screen()
 game_main()
-# ghost = RedGhost()
-# print(ghost.get_position(), 'dg')
-# ghost.move_towards(500, 500)
