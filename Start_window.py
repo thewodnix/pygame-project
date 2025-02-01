@@ -99,7 +99,7 @@ tile_images = {
     'empty': ground_image,
     'passage': passage_image
 }
-player_image = pygame.transform.scale(load_image_special('photo_menu_data/Pac_manModel3.png', 'White'),
+player_image = pygame.transform.scale(load_image_special('animation4.png', 'White'),
                                       (30, 30))
 redghost_image = pygame.transform.scale(load_image_special('Game_photo_data/red.png'), (30, 30))
 orange_image = pygame.transform.scale(load_image_special('Game_photo_data/orange_ghost.png'), (30, 30))
@@ -558,6 +558,12 @@ def game_main(level):
     player, level_x, level_y = generate_level(load_level(f'levels_data/level{level}_data'))
     redghost, level_x, level_y = generate_ghost(load_level(f'levels_data/level{level}_data'))
     orangeghost, level_x, level_y = generate_ghost_orange(load_level(f'levels_data/level{level}_data'))
+    image_sprite = [load_image_special("animation1.png", 'white'),
+                    load_image_special("animation2.png", 'white'),
+                    load_image_special("animation3.png", 'white'),
+                    load_image_special("animation4.png", 'white')]
+    value = 0
+    moving = False
     screen.fill((0, 0, 0))
     result = None
     total_score = 0
@@ -583,12 +589,24 @@ def game_main(level):
                     player.move('shot', 'right')
                 elif event.key == pygame.K_LEFT:
                     player.move('shot', 'left')
+                if event.key == pygame.K_a or event.key == pygame.K_d:
+                    moving = False
+                    value = 0
+        if moving:
+            value += 1
+        if value >= len(image_sprite):
+            value = 0
+        image = image_sprite[value]
+        image = pygame.transform.scale(image, (30, 30))
+        screen.blit(image, (player.get_position()))
         keys = pygame.key.get_pressed()
         # Управление на ASD
         if keys[pygame.K_a]:
             player.move('left', 'pass')
+            moving = True
         if keys[pygame.K_d]:
             player.move('right', 'pass')
+            moving = True
         if keys[pygame.K_SPACE]:
             player.move('jump', 'pass')
         if keys[pygame.K_s]:

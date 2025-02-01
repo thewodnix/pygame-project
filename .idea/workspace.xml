@@ -5,8 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment=";(">
+      <change afterPath="$PROJECT_DIR$/photo_data/animation1.aseprite" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/photo_data/animation1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/photo_data/animation2.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/photo_data/animation3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/photo_data/animation4.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/photo_data/player_animation.png" beforeDir="false" afterPath="$PROJECT_DIR$/photo_data/player_animation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Start_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Start_window.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,6 +67,7 @@
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;Dev-level&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/PycharmProjects/pygame-project/Start_window.py&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
     &quot;two.files.diff.last.used.file&quot;: &quot;C:/PycharmProjects/pygame-project/Start_window.py&quot;
   }
 }</component>
@@ -306,7 +312,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738440771860</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary=";(">
+      <option name="closed" value="true" />
+      <created>1738441144220</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1738441144220</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
