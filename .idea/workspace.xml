@@ -6,8 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment=";(">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/levels_data/level1_data" beforeDir="false" afterPath="$PROJECT_DIR$/levels_data/level1_data" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/photo_data/Game_photo_data/orange_ghost.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/photo_data/player_animation.png" beforeDir="false" afterPath="$PROJECT_DIR$/photo_data/player_animation.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,19 +52,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.Start_window.executor": "Run",
-    "Python.first_level.executor": "Run",
-    "Python.level_attempt.executor": "Run",
-    "Python.load_sprites.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Dev-level",
-    "last_opened_file_path": "C:/PycharmProjects/pygame-project/Start_window.py",
-    "two.files.diff.last.used.file": "C:/PycharmProjects/pygame-project/Start_window.py"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Start_window.executor&quot;: &quot;Run&quot;,
+    &quot;Python.first_level.executor&quot;: &quot;Run&quot;,
+    &quot;Python.level_attempt.executor&quot;: &quot;Run&quot;,
+    &quot;Python.load_sprites.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Dev-level&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/PycharmProjects/pygame-project/Start_window.py&quot;,
+    &quot;two.files.diff.last.used.file&quot;: &quot;C:/PycharmProjects/pygame-project/Start_window.py&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\PycharmProjects\pygame-project\photo_data" />
@@ -91,6 +90,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.10" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -112,6 +112,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.10 (pythonProject)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -171,8 +172,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.Start_window" />
-        <item itemvalue="Python.level_attempt" />
         <item itemvalue="Python.jump_test" />
+        <item itemvalue="Python.level_attempt" />
         <item itemvalue="Python.just_test" />
       </list>
     </recent_temporary>
@@ -297,7 +298,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738439205861</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary=";(">
+      <option name="closed" value="true" />
+      <created>1738440771860</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1738440771860</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
