@@ -4,12 +4,15 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment="Started making red ghost">
-      <change afterPath="$PROJECT_DIR$/photo_data/Final_window_photos/menu.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/photo_data/Final_window_photos/play_again_photo.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/pygame-project.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pygame-project.iml" afterDir="false" />
+    <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment="I made final screen and score calculations ;)">
+      <change afterPath="$PROJECT_DIR$/photo_data/player_animation.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Start_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Start_window.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/level_attempt.py" beforeDir="false" afterPath="$PROJECT_DIR$/level_attempt.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels_data/level2_data" beforeDir="false" afterPath="$PROJECT_DIR$/levels_data/level2_data" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels_data/level3_data" beforeDir="false" afterPath="$PROJECT_DIR$/levels_data/level3_data" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/music_data/Game_sounds_data/gun_shot.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/music_data/Game_sounds_data/gun_shot.mp3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,26 +66,26 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "Dev-level",
-    "last_opened_file_path": "C:/PycharmProjects/pygame-project/photo_data/Final_window_photos"
+    "last_opened_file_path": "C:/PycharmProjects/pygame-project/photo_data"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\PycharmProjects\pygame-project\photo_data" />
+      <recent name="C:\PycharmProjects\pygame-project\music_data\Game_sounds_data" />
       <recent name="C:\PycharmProjects\pygame-project\photo_data\Final_window_photos" />
       <recent name="C:\PycharmProjects\pygame-project\photo_data\Game_photo_data" />
-      <recent name="C:\PycharmProjects\pygame-project\music_data\Game_sounds_data" />
       <recent name="C:\PycharmProjects\pygame-project\music_data" />
-      <recent name="C:\Users\Dont_touch\PycharmProjects\pygame-project\photo_data\Game_photo_data" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\PycharmProjects\pygame-project\photo_data" />
       <recent name="C:\PycharmProjects\pygame-project\photo_data\Game_photo_data" />
       <recent name="C:\PycharmProjects\pygame-project\music_data\Game_sounds_data" />
       <recent name="C:\PycharmProjects\pygame-project\music_data\music_menu_data" />
-      <recent name="C:\PycharmProjects\pygame-project\photo_data" />
       <recent name="C:\Users\wodnix\PycharmProjects\pygame-project\photo_data\Game_photo_data" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.level_attempt">
+  <component name="RunManager" selected="Python.jump_test">
     <configuration name="Start_window" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pygame-project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -170,10 +173,10 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.level_attempt" />
         <item itemvalue="Python.jump_test" />
-        <item itemvalue="Python.just_test" />
         <item itemvalue="Python.Start_window" />
+        <item itemvalue="Python.level_attempt" />
+        <item itemvalue="Python.just_test" />
       </list>
     </recent_temporary>
   </component>
@@ -265,7 +268,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737918466638</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="I made final screen and score calculations ;)">
+      <option name="closed" value="true" />
+      <created>1738363239551</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1738363239551</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -300,6 +311,7 @@
     <MESSAGE value="Tried to make an ai" />
     <MESSAGE value="Add bullet" />
     <MESSAGE value="Started making red ghost" />
-    <option name="LAST_COMMIT_MESSAGE" value="Started making red ghost" />
+    <MESSAGE value="I made final screen and score calculations ;)" />
+    <option name="LAST_COMMIT_MESSAGE" value="I made final screen and score calculations ;)" />
   </component>
 </project>

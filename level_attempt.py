@@ -1,4 +1,4 @@
-from random import choice
+from random import choice, random, randint
 
 import pygame
 import sys
@@ -7,7 +7,7 @@ import os
 pygame.init()
 # размеры окна:
 tile_width = tile_height = 50
-size = width, height = tile_width * 20, tile_height * 11
+size = width, height = 1500, 800
 # screen — холст, на котором нужно рисовать:
 screen = pygame.display.set_mode(size)
 sound_click = pygame.mixer.Sound('music_data/music_menu_data/click_sound.mp3')
@@ -15,12 +15,103 @@ clock = pygame.time.Clock()
 pick_up = pygame.mixer.Sound('music_data/Game_sounds_data/pick_up_sound.mp3')
 pick_up_ammo = pygame.mixer.Sound('music_data/Game_sounds_data/pick_up_ammo_sound.mp3')
 shot_sound = pygame.mixer.Sound('music_data/Game_sounds_data/gun_shot.mp3')
+indentation_x = 225
+indentation_y = 100
 
 
 def clear_window():
     screen.fill((1, 1, 21))
     for i in all_sprites:
         i.kill()
+
+
+def image_downloader():
+    image_level1 = load_image('photo_data/photo_level_selection/level1_image.png')
+    image_l1 = pygame.transform.scale(image_level1, (250, 150))
+    image_level2 = load_image('photo_data/photo_level_selection/level2_image.png')
+    image_l2 = pygame.transform.scale(image_level2, (300, 300))
+    image_level3 = load_image('photo_data/photo_level_selection/level3_image.png')
+    image_l3 = pygame.transform.scale(image_level3, (300, 300))
+    screen.blit(image_l1, (width // 3 - 360, height // 2 - 120))
+    screen.blit(image_l2, (width // 2 - 150, height // 2 - 270))
+    screen.blit(image_l3, (width - 425, height // 2 - 270))
+
+
+def button_level_clicked_checker(pos):
+    level = 0
+    if fst_level_rect.collidepoint(pos):
+        sound_click.play()
+        level = 1
+    elif snd_level_rect.collidepoint(pos):
+        sound_click.play()
+        level = 2
+    elif trd_level_rect.collidepoint(pos):
+        sound_click.play()
+        level = 3
+    return level
+
+
+def button_maker(text, width, height, size):
+    # Создаем объект шрифта
+    font_button = pygame.font.Font(None, size)
+
+    # Создайте поверхность для кнопки
+    button_surface = pygame.Surface((width, height))
+
+    # Отображение текста на кнопке
+    text_button = font_button.render(text, True, (255, 255, 0), (0, 0, 0))
+    text_rect = text_button.get_rect(
+        center=(button_surface.get_width() / 2,
+                button_surface.get_height() / 2))
+    return button_surface, text_rect, text_button
+
+
+back_button_rect = pygame.Rect(width // 2 - 100, height - 125, 200, 100)
+fst_level_rect = pygame.Rect(width // 3 - 315, height // 2 + 50, 150, 50)
+snd_level_rect = pygame.Rect(width // 2 - 75, height // 2 + 50, 150, 50)
+trd_level_rect = pygame.Rect(width - 350, height // 2 + 50, 150, 50)
+surf_back, rect_back, text_back = button_maker('Back', 200, 100, 75)
+surf_fst_level, fst_level_back, fst_level_text = button_maker('1 Level', 150, 50, 50)
+surf_snd_level, snd_level_back, snd_level_text = button_maker('2 Level', 150, 50, 50)
+surf_trd_level, trd_level_back, trd_level_text = button_maker('3 Level', 150, 50, 50)
+
+
+def level_selection_menu():
+    running = True
+    fps = 50
+    while running:
+        # Получаем события из очереди событий
+        for event in pygame.event.get():
+            # Проверьте событие выхода
+            if event.type == pygame.QUIT:
+                running = False
+            # Проверяем событие нажатия кнопки мыши
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                if back_button_rect.collidepoint(event.pos):
+                    sound_click.play()
+                    # menu_shower()
+                    print('back')
+                level = button_level_clicked_checker(event.pos)
+                if level > 0:
+                    game_main(level)
+                    running = False
+        image_downloader()
+        shower_level_selection()
+        clock.tick(fps)
+        pygame.display.flip()
+
+
+def shower_level_selection():
+    # Показать текст кнопки
+    surf_back.blit(text_back, rect_back)
+    surf_fst_level.blit(fst_level_text, fst_level_back)
+    surf_snd_level.blit(snd_level_text, snd_level_back)
+    surf_trd_level.blit(trd_level_text, trd_level_back)
+    # Нарисуйте кнопку на экране
+    screen.blit(surf_back, (back_button_rect.x, back_button_rect.y))
+    screen.blit(surf_fst_level, (fst_level_rect.x, fst_level_rect.y))
+    screen.blit(surf_snd_level, (snd_level_rect.x, snd_level_rect.y))
+    screen.blit(surf_trd_level, (trd_level_rect.x, trd_level_rect.y))
 
 
 restart_btn = pygame.Rect(width // 2 - width // 5, height // 2 - 50, 100, 100)
@@ -50,17 +141,19 @@ def final_window(score, win_result):
     text_y = height // 2 + text.get_height() // 2 + height * 0.33
     running = True
     while running:
+        screen.fill((1, 1, 21))
         for event in pygame.event.get():
-            screen.fill((1, 1, 21))
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if restart_btn.collidepoint(event.pos):
                     sound_click.play()
                     game_main()
+                    running = False
                 elif menu_btn.collidepoint(event.pos):
                     sound_click.play()
-                    print('menu')
+                    level_selection_menu()
+                    running = False
         screen.blit(text_res, (text_res_x, text_res_y))
         screen.blit(text, (text_x, text_y))
         screen.blit(image_restart_btn, (width // 2 - 250, height // 2 - 100, 200, 200))
@@ -110,6 +203,7 @@ tile_images = {
 }
 player_image = load_image('photo_data/photo_menu_data/Pac_manModel3.png', 'White')
 redghost_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/red.png'), (32, 32))
+orange_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/orange_ghost.png'), (32, 32))
 
 
 class Crossroads(pygame.sprite.Sprite):
@@ -117,7 +211,7 @@ class Crossroads(pygame.sprite.Sprite):
         super().__init__(all_sprites, crossroads_group)
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(
-            tile_width * pos_x, tile_height * pos_y)
+            indentation_x + tile_width * pos_x, indentation_y + tile_height * pos_y)
 
 
 class Bullet(pygame.sprite.Sprite):
@@ -205,7 +299,7 @@ class Ammo(pygame.sprite.Sprite):
         super().__init__(all_sprites, ammo_group)
         self.image = ammo_image
         self.rect = self.image.get_rect().move(
-            tile_width * pos_x + 2, tile_height * pos_y + 12)
+            indentation_x + tile_width * pos_x + 2, indentation_y + tile_height * pos_y + 12)
 
 
 class Diamond(pygame.sprite.Sprite):
@@ -213,7 +307,7 @@ class Diamond(pygame.sprite.Sprite):
         super().__init__(all_sprites, diamond_group)
         self.image = diamond_image
         self.rect = self.image.get_rect().move(
-            tile_width * pos_x + 15, tile_height * pos_y + 25)
+            indentation_x + tile_width * pos_x + 15, indentation_y + tile_height * pos_y + 25)
 
     def get_position(self):
         return self.rect.x, self.rect.y
@@ -224,7 +318,7 @@ class Passage(pygame.sprite.Sprite):
         super().__init__(all_sprites, tiles_pac_group)
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(
-            tile_width * pos_x, tile_height * pos_y)
+            indentation_x + tile_width * pos_x, indentation_y + tile_height * pos_y)
 
 
 class Tile(pygame.sprite.Sprite):
@@ -232,7 +326,7 @@ class Tile(pygame.sprite.Sprite):
         super().__init__(tiles_ghosts_group, tiles_pac_group, all_sprites)
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(
-            tile_width * pos_x, tile_height * pos_y)
+            indentation_x + tile_width * pos_x, indentation_y + tile_height * pos_y)
 
 
 class Ground(pygame.sprite.Sprite):
@@ -240,7 +334,79 @@ class Ground(pygame.sprite.Sprite):
         super().__init__(all_sprites)
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(
-            tile_width * pos_x, tile_height * pos_y)
+            indentation_x + tile_width * pos_x, indentation_y + tile_height * pos_y)
+
+
+class OrangeGhost(pygame.sprite.Sprite):
+    def __init__(self, x_pos, y_pos):
+        super().__init__(ghost_group, all_sprites)
+        self.image = orange_image
+        self.rect = self.image.get_rect().move(
+            indentation_x + tile_width * x_pos + 15, indentation_y + tile_height * y_pos + 5)
+        self.speed = 4
+        self.dir = choice(['right', 'left'])
+        self.cell_size = 50
+        self.target_x = 0
+        self.target_y = 0
+        self.move_possibility = True
+        self.count_attempts = 0
+        self.alive = True
+
+    def get_position(self):
+        return self.rect.x, self.rect.y
+
+    def is_alive(self):
+        self.alive = False
+        self.kill()
+
+    def possible_moves(self, *coord) -> bool:
+        x, y = self.rect.x, self.rect.y
+        self.rect.x, self.rect.y = coord
+        if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+            self.rect.x, self.rect.y = x, y
+            return False
+        self.rect.x, self.rect.y = x, y
+        return True
+
+    def move_towards(self, target_x, target_y):
+        self.target_reached()
+        target_ways = []
+        x, y = self.rect.x, self.rect.y
+
+        directions = {
+            'up': (x, y - self.speed),
+            'down': (x, y + self.speed),
+            'left': (x - self.speed, y),
+            'right': (x + self.speed, y)
+        }
+
+        if pygame.sprite.spritecollideany(self, crossroads_group):
+            for direction, (new_x, new_y) in directions.items():
+                if self.possible_moves(new_x, new_y):
+                    distance = ((new_x - target_x) ** 2 + (new_y - target_y) ** 2) ** 0.5
+                    target_ways.append((distance, direction))
+
+            if target_ways:
+                if random() < 0.2:
+                    self.dir = choice([way[1] for way in target_ways])
+                else:
+                    self.dir = min(target_ways)[1]
+
+        new_x, new_y = directions[self.dir]
+        if self.possible_moves(new_x, new_y):
+            if self.dir == 'right':
+                self.image = pygame.transform.flip(
+                    pygame.transform.scale(load_image('photo_data/Game_photo_data/orange_ghost.png'), (32, 32)), True,
+                    False)
+            elif self.dir == 'left':
+                self.image = pygame.transform.scale(load_image('photo_data/Game_photo_data/orange_ghost.png'), (32, 32))
+
+            self.rect.x, self.rect.y = new_x, new_y
+
+    def target_reached(self):
+        if self.alive:
+            if pygame.sprite.spritecollideany(self, player_group):
+                return True
 
 
 class RedGhost(pygame.sprite.Sprite):
@@ -248,7 +414,7 @@ class RedGhost(pygame.sprite.Sprite):
         super().__init__(ghost_group, all_sprites)
         self.image = redghost_image
         self.rect = self.image.get_rect().move(
-            tile_width * x_pos + 15, tile_height * y_pos + 5)
+            indentation_x + tile_width * x_pos + 15, indentation_y + tile_height * y_pos + 5)
         self.speed = 4
         self.dir = choice(['right', 'left'])
         self.cell_size = 50
@@ -345,7 +511,7 @@ class Player(pygame.sprite.Sprite):
         self.score = 0
         self.image = player_image
         self.rect = self.image.get_rect().move(
-            tile_width * pos_x + 15, tile_height * pos_y + 10 + self.gravity)
+            indentation_x + tile_width * pos_x + 15, indentation_y + tile_height * pos_y + 10 + self.gravity)
         self.jumpCount = 0
         self.speed = 8
         self.ammo_count = 0
@@ -374,6 +540,7 @@ class Player(pygame.sprite.Sprite):
             if self.ammo_count:
                 bullet = Bullet(self.rect.x, self.rect.y, direction)
                 self.score += bullet.gun_shot_maker()
+                shot_sound.play()
                 self.ammo_count -= 1
             else:
                 pass
@@ -411,6 +578,7 @@ class Player(pygame.sprite.Sprite):
                     self.ammo_count += 1
                     i.kill()
                     break
+
     def score_taker(self):
         return self.score
 
@@ -529,6 +697,17 @@ def generate_ghost(level):
     return new_ghost, x, y
 
 
+def generate_ghost_orange(level):
+    new_ghost, x, y = None, None, None
+    for y in range(len(level)):
+        for x in range(len(level[y])):
+            if level[y][x] == 'c':
+                Ground('empty', x, y)
+                new_ghost = OrangeGhost(x, y)
+    # вернем игрока, а также размер поля в клетках
+    return new_ghost, x, y
+
+
 def terminate():
     pygame.quit()
     sys.exit()
@@ -567,6 +746,7 @@ def start_screen():
 def game_main():
     player, level_x, level_y = generate_level(load_level('levels_data/level1_data'))
     redghost, level_x, level_y = generate_ghost(load_level('levels_data/level1_data'))
+    oragneghost, level_x, level_y = generate_ghost_orange(load_level('levels_data/level1_data'))
     screen.fill((0, 0, 0))
     result = None
     total_score = 0
@@ -596,18 +776,15 @@ def game_main():
         # Управление на WASD
         if keys[pygame.K_a]:
             player.move('left', 'pass')
-            last_direction = 'left'
         if keys[pygame.K_d]:
             player.move('right', 'pass')
-            last_direction = 'right'
         if keys[pygame.K_SPACE]:
             player.move('jump', 'pass')
-            last_direction = 'jump'
         if keys[pygame.K_s]:
             player.move('down', 'pass')
-            last_direction = 'down'
             # pygame.mouse.set_visible(False)
         redghost.move_towards(target_x, target_y)
+        oragneghost.move_towards(target_x, target_y)
         player.gravitation()
         # Обновление
         all_sprites.update()
