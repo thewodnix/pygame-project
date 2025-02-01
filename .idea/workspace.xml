@@ -5,9 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment="I made final screen and score calculations ;)">
-      <change afterPath="$PROJECT_DIR$/photo_data/player_animation.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_17_01_2025_15_19__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_17_01_2025_15_19__Changes_.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Start_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Start_window.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -29,6 +26,7 @@
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -171,8 +169,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.Start_window" />
-        <item itemvalue="Python.jump_test" />
         <item itemvalue="Python.level_attempt" />
+        <item itemvalue="Python.jump_test" />
         <item itemvalue="Python.just_test" />
       </list>
     </recent_temporary>
@@ -273,7 +271,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738363239551</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="I made final screen and score calculations ;)">
+      <option name="closed" value="true" />
+      <created>1738438269696</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1738438269696</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -308,8 +314,8 @@
     <MESSAGE value="Tried to make an ai" />
     <MESSAGE value="Add bullet" />
     <MESSAGE value="Started making red ghost" />
-    <MESSAGE value="I made final screen and score calculations ;)" />
     <MESSAGE value="I did lots of things! ;)" />
-    <option name="LAST_COMMIT_MESSAGE" value="I did lots of things! ;)" />
+    <MESSAGE value="I made final screen and score calculations ;)" />
+    <option name="LAST_COMMIT_MESSAGE" value="I made final screen and score calculations ;)" />
   </component>
 </project>

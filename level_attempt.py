@@ -690,7 +690,7 @@ def generate_ghost(level):
     new_ghost, x, y = None, None, None
     for y in range(len(level)):
         for x in range(len(level[y])):
-            if level[y][x] == 'k':
+            if level[y][x] == 'b':
                 Ground('empty', x, y)
                 new_ghost = RedGhost(x, y)
     # вернем игрока, а также размер поля в клетках

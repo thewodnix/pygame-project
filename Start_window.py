@@ -1,5 +1,5 @@
 import pygame
-from random import choice
+from random import choice, random
 from load_sprites import load_image
 import os
 import sys
@@ -116,8 +116,10 @@ tile_images = {
     'empty': ground_image,
     'passage': passage_image
 }
-player_image = pygame.transform.scale(load_image_special('photo_data/photo_menu_data/Pac_manModel3.png', 'White'), (30, 30))
+player_image = pygame.transform.scale(load_image_special('photo_data/photo_menu_data/Pac_manModel3.png', 'White'),
+                                      (30, 30))
 redghost_image = pygame.transform.scale(load_image_special('photo_data/Game_photo_data/red.png'), (30, 30))
+orange_image = pygame.transform.scale(load_image_special('photo_data/Game_photo_data/orange_ghost.png'), (30, 30))
 
 
 class Crossroads(pygame.sprite.Sprite):
@@ -284,7 +286,6 @@ class RedGhost(pygame.sprite.Sprite):
         return True
 
     def move_towards(self, target_x, target_y):
-        self.target_reached()
         target_ways = []
         x, y = self.rect.x, self.rect.y
         if self.dir == 'right' and pygame.sprite.spritecollideany(self, crossroads_group):
@@ -464,7 +465,6 @@ class OrangeGhost(pygame.sprite.Sprite):
         return True
 
     def move_towards(self, target_x, target_y):
-        self.target_reached()
         target_ways = []
         x, y = self.rect.x, self.rect.y
 
@@ -491,10 +491,10 @@ class OrangeGhost(pygame.sprite.Sprite):
         if self.possible_moves(new_x, new_y):
             if self.dir == 'right':
                 self.image = pygame.transform.flip(
-                    pygame.transform.scale(load_image('photo_data/Game_photo_data/orange_ghost.png'), (32, 32)), True,
+                    pygame.transform.scale(load_image('photo_data', 'Game_photo_data/orange_ghost.png'), (32, 32)), True,
                     False)
             elif self.dir == 'left':
-                self.image = pygame.transform.scale(load_image('photo_data/Game_photo_data/orange_ghost.png'), (32, 32))
+                self.image = pygame.transform.scale(load_image('photo_data', 'Game_photo_data/orange_ghost.png'), (32, 32))
 
             self.rect.x, self.rect.y = new_x, new_y
 
@@ -546,9 +546,20 @@ def generate_ghost(level):
     new_ghost, x, y = None, None, None
     for y in range(len(level)):
         for x in range(len(level[y])):
-            if level[y][x] == 'k':
+            if level[y][x] == 'b':
                 Ground('empty', x, y)
                 new_ghost = RedGhost(x, y)
+    # вернем игрока, а также размер поля в клетках
+    return new_ghost, x, y
+
+
+def generate_ghost_orange(level):
+    new_ghost, x, y = None, None, None
+    for y in range(len(level)):
+        for x in range(len(level[y])):
+            if level[y][x] == 'c':
+                Ground('empty', x, y)
+                new_ghost = OrangeGhost(x, y)
     # вернем игрока, а также размер поля в клетках
     return new_ghost, x, y
 
@@ -591,6 +602,7 @@ def start_screen():
 def game_main(level):
     player, level_x, level_y = generate_level(load_level(f'levels_data/level{level}_data'))
     redghost, level_x, level_y = generate_ghost(load_level(f'levels_data/level{level}_data'))
+    orangeghost, level_x, level_y = generate_ghost_orange(load_level(f'levels_data/level{level}_data'))
     screen.fill((0, 0, 0))
     result = None
     total_score = 0
@@ -617,7 +629,7 @@ def game_main(level):
                 elif event.key == pygame.K_LEFT:
                     player.move('shot', 'left')
         keys = pygame.key.get_pressed()
-        # Управление на WASD
+        # Управление на ASD
         if keys[pygame.K_a]:
             player.move('left', 'pass')
         if keys[pygame.K_d]:
@@ -628,6 +640,7 @@ def game_main(level):
             player.move('down', 'pass')
             # pygame.mouse.set_visible(False)
         redghost.move_towards(target_x, target_y)
+        orangeghost.move_towards(target_x, target_y)
         player.gravitation()
         # Обновление
         all_sprites.update()
@@ -656,9 +669,6 @@ def menu_shower():
     screen.blit(surf_settings, (settings_button_rect.x, settings_button_rect.y))
     # Обновить состояние
     pygame.display.update()
-
-
-
 
 
 def image_downloader():
