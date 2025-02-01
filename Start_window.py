@@ -22,6 +22,7 @@ pick_up_ammo = pygame.mixer.Sound('music_data/Game_sounds_data/pick_up_ammo_soun
 shot_sound = pygame.mixer.Sound('music_data/Game_sounds_data/gun_shot.mp3')
 indentation_x = 200
 indentation_y = 10
+cheat_code_flag = False
 
 
 def clear_window():
@@ -282,6 +283,7 @@ class RedGhost(pygame.sprite.Sprite):
             if self.possible_moves(x + self.speed, y):
                 target_ways.append(
                     ((((self.rect.x - target_x + self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'right'))
+
         if self.dir == 'left' and pygame.sprite.spritecollideany(self, crossroads_group):
             if self.possible_moves(x, y - self.speed):
                 target_ways.append(
@@ -292,6 +294,7 @@ class RedGhost(pygame.sprite.Sprite):
             if self.possible_moves(x - self.speed, y):
                 target_ways.append(
                     ((((self.rect.x - target_x - self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'left'))
+
         if self.dir == 'down' and pygame.sprite.spritecollideany(self, crossroads_group):
             if self.possible_moves(x, y + self.speed):
                 target_ways.append(
@@ -302,6 +305,7 @@ class RedGhost(pygame.sprite.Sprite):
             if self.possible_moves(x - self.speed, y):
                 target_ways.append(
                     ((((self.rect.x - target_x - self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'left'))
+
         if self.dir == 'up' and pygame.sprite.spritecollideany(self, crossroads_group):
             if self.possible_moves(x, y - self.speed):
                 target_ways.append(
@@ -312,11 +316,13 @@ class RedGhost(pygame.sprite.Sprite):
             if self.possible_moves(x - self.speed, y):
                 target_ways.append(
                     ((((self.rect.x - target_x - self.speed) ** 2 + (self.rect.y - target_y) ** 2) ** 0.5), 'left'))
+
         if pygame.sprite.spritecollideany(self, crossroads_group) and self.move_possibility:
             self.count_attempts += 1
             if self.count_attempts == 10:
                 self.count_attempts = 0
                 self.dir = min(target_ways)[1]
+
         if self.dir == 'right' and self.possible_moves(x + self.speed, y):
             self.rect.x += self.speed
         elif self.dir == 'up' and self.possible_moves(x, y - self.speed):
@@ -492,6 +498,7 @@ player = None
 redghost = None
 orangeghost = None
 
+#все группы спрайтов
 crossroads_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
 ammo_group = pygame.sprite.Group()
@@ -552,6 +559,7 @@ def generate_ghost_orange(level):
 
 
 def terminate():
+    #полный выход
     pygame.quit()
     sys.exit()
 
@@ -609,7 +617,7 @@ def game_main(level):
         pygame.display.flip()
 
 
-def menu_shower():
+def menu_shower(fa=False):
     screen.fill((1, 1, 21))
     start_window_draw(screen)
     image = load_image_special('photo_menu_data/Pac_manModel3.png', 'WHITE')
@@ -624,8 +632,16 @@ def menu_shower():
     screen.blit(surf_play, (play_button_rect.x, play_button_rect.y))
     screen.blit(surf_quit, (quit_button_rect.x, quit_button_rect.y))
     screen.blit(surf_settings, (settings_button_rect.x, settings_button_rect.y))
+    if fa:
+        cheats_shower()
     # Обновить состояние
     pygame.display.update()
+
+
+def cheats_shower():
+    #показваем кнопку
+    surf_cheat_code.blit(text_cheat_code, rect_cheat_code)
+    screen.blit(surf_cheat_code, (cheat_code_button_rect.x, cheat_code_button_rect.y))
 
 
 def image_downloader():
@@ -679,6 +695,29 @@ def level_selection_menu():
         pygame.display.flip()
 
 
+def draw_cheats(screen):
+    # рисуем текст
+    screen.fill((1, 1, 20))
+    font = pygame.font.Font(None, 80)
+    text = font.render("Ты знал, что пользаваться читам - плохо?", True, (255, 255, 0))
+    text_x = width // 2 - text.get_width() // 2
+    text_y = height // 2 - text.get_height() // 2 - height * 0.2
+    screen.blit(text, (text_x, text_y))
+    text_w = text.get_width()
+    text_h = text.get_height()
+
+
+def cheats_menu():
+    running = True
+    while running:
+        draw_cheats(screen)
+        for event in pygame.event.get():
+            # Проверьте событие выхода
+            if event.type == pygame.QUIT:
+                running = False
+        pygame.display.flip()
+
+
 def shower_level_selection():
     # Показать текст кнопки
     surf_back.blit(text_back, rect_back)
@@ -716,12 +755,17 @@ surf_back, rect_back, text_back = button_maker('Back', 200, 100, 75)
 surf_fst_level, fst_level_back, fst_level_text = button_maker('1 Level', 150, 50, 50)
 surf_snd_level, snd_level_back, snd_level_text = button_maker('2 Level', 150, 50, 50)
 surf_trd_level, trd_level_back, trd_level_text = button_maker('3 Level', 150, 50, 50)
+
 play_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
 quit_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)
+
 settings_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 75, 300, 100)
 surf_play, rect_play, text_play = button_maker('Play', 300, 100, 60)
 surf_quit, rect_quit, text_quit = button_maker('Quit', 300, 100, 60)
 surf_settings, rect_settings, text_settings = button_maker('Settings', 300, 100, 60)
+
+cheat_code_button_rect = pygame.Rect(0, 0, 300, 100)
+surf_cheat_code, rect_cheat_code, text_cheat_code = button_maker('Cheat', 150, 50, 60)
 
 
 def start_window_draw(screen):
@@ -743,6 +787,7 @@ def start_window_draw(screen):
 
 
 def start_menu():
+    flag = False
     running = True
     while running:
         # Получаем события из очереди событий
@@ -751,6 +796,9 @@ def start_menu():
             if event.type == pygame.QUIT:
                 running = False
                 # screen.fill((1, 1, 20))
+            # cheats
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
+                flag = True
             # Проверяем событие нажатия кнопки мыши
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if play_button_rect.collidepoint(event.pos):
@@ -766,9 +814,13 @@ def start_menu():
                 elif quit_button_rect.collidepoint(event.pos):
                     sound_click.play()
                     running = False
+                elif rect_cheat_code.collidepoint(event.pos):
+                    sound_click.play()
+                    clear_window()
+                    cheats_menu()
                 if event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
                     clear_window()
-        menu_shower()
+        menu_shower(flag)
         # Обновить состояние
         pygame.display.flip()
 
