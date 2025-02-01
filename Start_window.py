@@ -442,7 +442,6 @@ class Player(pygame.sprite.Sprite):
 #         self.image1 = pygame.transform.scale(self.image, (24, 24))
 #         self.count = 0
 #         # pygame.time.set_timer(GAME_EVENT_TYPE, self.delay)
-#
 #     # вспомогательные методы, возвращающие информацию о положении призрака / выставляющие эти значения
 #     def get_position(self):
 #         return self.x, self.y
