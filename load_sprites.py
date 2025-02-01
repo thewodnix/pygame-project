@@ -18,3 +18,4 @@ def load_image_special(name, colorkey=None):
     else:
         image = image.convert_alpha()
     return image
+

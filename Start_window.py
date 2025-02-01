@@ -3,6 +3,7 @@ from random import choice, random
 from load_sprites import load_image_special
 import os
 import sys
+import htp
 
 # Создаём окно Pygame
 pygame.init()
@@ -489,6 +490,7 @@ FPS = 50
 player = None
 # призраки
 redghost = None
+orangeghost = None
 
 crossroads_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
@@ -777,6 +779,8 @@ def start_menu():
                     sound_click.play()
                     clear_window()
                     running = False
+                    htp.game()
+                    start_menu()
                 elif quit_button_rect.collidepoint(event.pos):
                     sound_click.play()
                     running = False
@@ -842,5 +846,3 @@ def start_window():
 
 if __name__ == '__main__':
     start_window()
-
-# Тимур В.
