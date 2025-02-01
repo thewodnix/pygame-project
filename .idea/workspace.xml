@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment=";(">
-      <change beforePath="$PROJECT_DIR$/Start_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Start_window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/load_sprites.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_sprites.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels_data/level1_data" beforeDir="false" afterPath="$PROJECT_DIR$/levels_data/level1_data" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/photo_data/Game_photo_data/orange_ghost.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -288,7 +289,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738438711743</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary=";(">
+      <option name="closed" value="true" />
+      <created>1738439205861</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1738439205861</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
