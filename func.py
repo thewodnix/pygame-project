@@ -22,10 +22,10 @@ def start_window_draw(screen):
 
 def draw_stngs(screen):
     screen.fill((1, 1, 20))
-    font = pygame.font.Font('assets/fonts/title.ttf', 200)
-    text = font.render("Settings", True, (255, 255, 0))
+    font = pygame.font.Font('assets/fonts/title.ttf', 100)
+    text = font.render("How to play", True, (255, 255, 0))
     text_x = width // 2 - text.get_width() // 2
-    text_y = height // 2 - text.get_height() // 2 - height * 0.33
+    text_y = height // 2 - text.get_height() // 2 - height * 0.4
     screen.blit(text, (text_x, text_y))
     text_w = text.get_width()
     text_h = text.get_height()
@@ -82,7 +82,7 @@ quit_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)
 surf_quit, rect_quit, text_quit = button_maker('Quit', 300, 100, 60)
 
 settings_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 75, 300, 100)
-surf_settings, rect_settings, text_settings = button_maker('Settings', 300, 100, 60)
+surf_settings, rect_settings, text_settings = button_maker('How to play', 300, 100, 60)
 
 music_button_rect = pygame.Rect(width // 2 - 150, height // 2 - 50, 300, 100)
 surf_music, rect_music, text_music = button_maker('Music', 300, 100, 60)

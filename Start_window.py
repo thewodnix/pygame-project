@@ -1,5 +1,6 @@
 import pygame
 from pygame import Rect
+import htp
 import itertools
 from func import *
 from load_sprites import load_image
@@ -40,8 +41,7 @@ while running:
                     clear_window()
                     sound_click.play()
                     menu = False
-                    draw_stngs(screen)
-                    stngs = True
+                    menu = htp.game()
 
                 elif quit_button_rect.collidepoint(event.pos):
                     sound_click.play()
@@ -113,7 +113,6 @@ while running:
                 if back_button_rect.collidepoint(event.pos):
                     stngs = False
                     menu = True
-                    print(1)
 
                 elif quit_button_rect.collidepoint(event.pos):
                     sound_click.play()
