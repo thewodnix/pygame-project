@@ -1,6 +1,6 @@
 import pygame
 from random import choice, random
-from load_sprites import load_image
+from load_sprites import load_image_special
 import os
 import sys
 
@@ -9,7 +9,7 @@ pygame.init()
 size = width, height = 1500, 900
 tile_height, tile_width = 38, 38
 screen = pygame.display.set_mode(size)
-animation_set = [load_image(f'photo_data/photo_menu_data', f"Pac_manModel{i}.png", 'WHITE') for i in range(1, 4)]
+animation_set = [load_image_special(f'photo_menu_data/Pac_manModel{i}.png', 'WHITE') for i in range(1, 4)]
 pygame.display.set_caption('PAC-MAN')
 sound_pac = pygame.mixer.Sound('music_data/music_menu_data/Voicy_Pac-Man Pellet Eaten.mp3')
 sound_click = pygame.mixer.Sound('music_data/music_menu_data/click_sound.mp3')
@@ -32,11 +32,24 @@ def clear_window():
 restart_btn = pygame.Rect(width // 2 - width // 5, height // 2 - 50, 100, 100)
 
 
+def load_level(filename):
+    filename = filename
+    # читаем уровень, убирая символы перевода строки
+    with open(filename, 'r') as mapFile:
+        level_map = [line.strip() for line in mapFile]
+
+    # и подсчитываем максимальную длину
+    max_width = max(map(len, level_map))
+
+    # дополняем каждую строку пустыми клетками ('.')
+    return list(map(lambda x: x.ljust(max_width, '.'), level_map))
+
+
 def final_window(score, win_result, level):
     clear_window()
-    image_restart = load_image_special('photo_data/Final_window_photos/play_again_photo.png', 'black')
+    image_restart = load_image_special('Final_window_photos/play_again_photo.png', 'black')
     image_restart_btn = pygame.transform.scale(image_restart, (200, 200))
-    image_menu = load_image_special('photo_data/Final_window_photos/menu.png', 'black')
+    image_menu = load_image_special('Final_window_photos/menu.png', 'black')
     image_menu_btn = pygame.transform.scale(image_menu, (200, 200))
 
     restart_btn = pygame.Rect(width // 2 - 250, height // 2 - 100, 200, 200)
@@ -76,50 +89,20 @@ def final_window(score, win_result, level):
         pygame.display.flip()
 
 
-def load_level(filename):
-    filename = filename
-    # читаем уровень, убирая символы перевода строки
-    with open(filename, 'r') as mapFile:
-        level_map = [line.strip() for line in mapFile]
-
-    # и подсчитываем максимальную длину
-    max_width = max(map(len, level_map))
-
-    # дополняем каждую строку пустыми клетками ('.')
-    return list(map(lambda x: x.ljust(max_width, '.'), level_map))
-
-
-def load_image_special(name, colorkey=None):
-    fullname = os.path.join(name)
-    # если файл не существует, то выходим
-    if not os.path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        sys.exit()
-    image = pygame.image.load(fullname)
-    if colorkey is not None:
-        image = image.convert()
-        if colorkey == -1:
-            colorkey = image.get_at((0, 0))
-        image.set_colorkey(colorkey)
-    else:
-        image = image.convert_alpha()
-    return image
-
-
-image_wall = pygame.transform.scale(load_image_special('photo_data/Game_photo_data/wall.png'), (38, 38))
-ground_image = pygame.transform.scale(load_image_special('photo_data/Game_photo_data/ground.png'), (38, 38))
-passage_image = pygame.transform.scale(load_image_special('photo_data/Game_photo_data/special_waLL.png'), (38, 38))
-diamond_image = pygame.transform.scale(load_image_special('photo_data/Game_photo_data/diamond.png', 'White'), (20, 20))
-ammo_image = pygame.transform.scale(load_image_special('photo_data/Game_photo_data/ammo.png', 'White'), (20, 20))
+image_wall = pygame.transform.scale(load_image_special('Game_photo_data/wall.png'), (38, 38))
+ground_image = pygame.transform.scale(load_image_special('Game_photo_data/ground.png'), (38, 38))
+passage_image = pygame.transform.scale(load_image_special('Game_photo_data/special_waLL.png'), (38, 38))
+diamond_image = pygame.transform.scale(load_image_special('Game_photo_data/diamond.png', 'White'), (20, 20))
+ammo_image = pygame.transform.scale(load_image_special('Game_photo_data/ammo.png', 'White'), (20, 20))
 tile_images = {
     'wall': image_wall,
     'empty': ground_image,
     'passage': passage_image
 }
-player_image = pygame.transform.scale(load_image_special('photo_data/photo_menu_data/Pac_manModel3.png', 'White'),
+player_image = pygame.transform.scale(load_image_special('photo_menu_data/Pac_manModel3.png', 'White'),
                                       (30, 30))
-redghost_image = pygame.transform.scale(load_image_special('photo_data/Game_photo_data/red.png'), (30, 30))
-orange_image = pygame.transform.scale(load_image_special('photo_data/Game_photo_data/orange_ghost.png'), (30, 30))
+redghost_image = pygame.transform.scale(load_image_special('Game_photo_data/red.png'), (30, 30))
+orange_image = pygame.transform.scale(load_image_special('Game_photo_data/orange_ghost.png'), (30, 30))
 
 
 class Crossroads(pygame.sprite.Sprite):
@@ -138,7 +121,7 @@ class Bullet(pygame.sprite.Sprite):
         self.score = 0
         self.speed = 5
         self.image = pygame.transform.scale(
-            load_image_special(f'photo_data/Game_photo_data/bullet_{direction}.png', 'White'),
+            load_image_special(f'Game_photo_data/bullet_{direction}.png', 'White'),
             (20, 20))
         self.rect = self.image.get_rect().move(self.pos_x, self.pos_y)
         self.direction = direction
@@ -491,10 +474,12 @@ class OrangeGhost(pygame.sprite.Sprite):
         if self.possible_moves(new_x, new_y):
             if self.dir == 'right':
                 self.image = pygame.transform.flip(
-                    pygame.transform.scale(load_image('photo_data', 'Game_photo_data/orange_ghost.png'), (32, 32)), True,
+                    pygame.transform.scale(load_image_special('Game_photo_data/orange_ghost.png'), (32, 32)),
+                    True,
                     False)
             elif self.dir == 'left':
-                self.image = pygame.transform.scale(load_image('photo_data', 'Game_photo_data/orange_ghost.png'), (32, 32))
+                self.image = pygame.transform.scale(load_image_special('Game_photo_data/orange_ghost.png'),
+                                                    (32, 32))
 
             self.rect.x, self.rect.y = new_x, new_y
 
@@ -569,36 +554,6 @@ def terminate():
     sys.exit()
 
 
-def start_screen():
-    intro_text = ["ЗАСТАВКА", "",
-                  "Правила игры",
-                  "Если в правилах несколько строк,",
-                  "приходится выводить их построчно"]
-
-    fon = pygame.transform.scale(load_image_special('fon.jpg'), (width, height))
-    screen.blit(fon, (0, 0))
-    font = pygame.font.Font(None, 30)
-    text_coord = 50
-    for line in intro_text:
-        string_rendered = font.render(line, 1, pygame.Color('black'))
-        intro_rect = string_rendered.get_rect()
-        text_coord += 10
-        intro_rect.top = text_coord
-        intro_rect.x = 10
-        text_coord += intro_rect.height
-        screen.blit(string_rendered, intro_rect)
-
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                terminate()
-            elif event.type == pygame.KEYDOWN or \
-                    event.type == pygame.MOUSEBUTTONDOWN:
-                return  # начинаем игру
-        pygame.display.flip()
-        clock.tick(FPS)
-
-
 def game_main(level):
     player, level_x, level_y = generate_level(load_level(f'levels_data/level{level}_data'))
     redghost, level_x, level_y = generate_ghost(load_level(f'levels_data/level{level}_data'))
@@ -655,7 +610,7 @@ def game_main(level):
 def menu_shower():
     screen.fill((1, 1, 21))
     start_window_draw(screen)
-    image = load_image('photo_data/photo_menu_data', 'Pac_manModel3.png', 'WHITE')
+    image = load_image_special('photo_menu_data/Pac_manModel3.png', 'WHITE')
     # рисуем спрайт
     image1 = pygame.transform.scale(image, (110, 110))
     screen.blit(image1, (width // 2 - 150, height // 2 - 63 - height * 0.33))
@@ -673,11 +628,11 @@ def menu_shower():
 
 def image_downloader():
     screen.fill((1, 1, 21))
-    image_level1 = load_image('photo_data/photo_level_selection', 'level1_image.png')
+    image_level1 = load_image_special('photo_level_selection/level1_image.png')
     image_l1 = pygame.transform.scale(image_level1, (250, 150))
-    image_level2 = load_image('photo_data/photo_level_selection', 'level2_image.png')
+    image_level2 = load_image_special('photo_level_selection/level2_image.png')
     image_l2 = pygame.transform.scale(image_level2, (300, 300))
-    image_level3 = load_image('photo_data/photo_level_selection', 'level3_image.png')
+    image_level3 = load_image_special('photo_level_selection/level3_image.png')
     image_l3 = pygame.transform.scale(image_level3, (300, 300))
     screen.blit(image_l1, (width // 3 - 360, height // 2 - 120))
     screen.blit(image_l2, (width // 2 - 150, height // 2 - 270))
