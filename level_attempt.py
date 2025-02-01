@@ -109,7 +109,7 @@ tile_images = {
     'passage': passage_image
 }
 player_image = load_image('photo_data/photo_menu_data/Pac_manModel3.png', 'White')
-redghost_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/red.png'), (32, 32))
+redghost_image = pygame.transform.scale(load_image('photo_data/Game_photo_data/red.png'), (35, 35))
 
 
 class Crossroads(pygame.sprite.Sprite):
@@ -324,10 +324,13 @@ class RedGhost(pygame.sprite.Sprite):
                 self.count_attempts = 0
                 self.dir = min(target_ways)[1]
         if self.dir == 'right' and self.possible_moves(x + self.speed, y):
+            self.image = pygame.transform.flip(
+                pygame.transform.scale(load_image('photo_data/Game_photo_data/red.png'), (40, 40)), True, False)
             self.rect.x += self.speed
         elif self.dir == 'up' and self.possible_moves(x, y - self.speed):
             self.rect.y -= self.speed
         elif self.dir == 'left' and self.possible_moves(x - self.speed, y):
+            self.image = pygame.transform.scale(load_image('photo_data/Game_photo_data/red.png'), (40, 40))
             self.rect.x -= self.speed
         elif self.dir == 'down' and self.possible_moves(x, y + self.speed):
             self.rect.y += self.speed
@@ -411,6 +414,7 @@ class Player(pygame.sprite.Sprite):
                     self.ammo_count += 1
                     i.kill()
                     break
+
     def score_taker(self):
         return self.score
 
