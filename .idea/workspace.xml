@@ -6,13 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment="I made final screen and score calculations ;)">
       <change afterPath="$PROJECT_DIR$/photo_data/player_animation.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_17_01_2025_15_19__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_17_01_2025_15_19__Changes_.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Start_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Start_window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/level_attempt.py" beforeDir="false" afterPath="$PROJECT_DIR$/level_attempt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/levels_data/level2_data" beforeDir="false" afterPath="$PROJECT_DIR$/levels_data/level2_data" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/levels_data/level3_data" beforeDir="false" afterPath="$PROJECT_DIR$/levels_data/level3_data" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/music_data/Game_sounds_data/gun_shot.mp3" beforeDir="false" afterPath="$PROJECT_DIR$/music_data/Game_sounds_data/gun_shot.mp3" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,7 +62,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "Dev-level",
-    "last_opened_file_path": "C:/PycharmProjects/pygame-project/photo_data"
+    "last_opened_file_path": "C:/PycharmProjects/pygame-project/Start_window.py",
+    "two.files.diff.last.used.file": "C:/PycharmProjects/pygame-project/Start_window.py"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -85,7 +82,7 @@
       <recent name="C:\Users\wodnix\PycharmProjects\pygame-project\photo_data\Game_photo_data" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.jump_test">
+  <component name="RunManager" selected="Python.Start_window">
     <configuration name="Start_window" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pygame-project" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -173,8 +170,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.jump_test" />
         <item itemvalue="Python.Start_window" />
+        <item itemvalue="Python.jump_test" />
         <item itemvalue="Python.level_attempt" />
         <item itemvalue="Python.just_test" />
       </list>
@@ -312,6 +309,7 @@
     <MESSAGE value="Add bullet" />
     <MESSAGE value="Started making red ghost" />
     <MESSAGE value="I made final screen and score calculations ;)" />
-    <option name="LAST_COMMIT_MESSAGE" value="I made final screen and score calculations ;)" />
+    <MESSAGE value="I did lots of things! ;)" />
+    <option name="LAST_COMMIT_MESSAGE" value="I did lots of things! ;)" />
   </component>
 </project>

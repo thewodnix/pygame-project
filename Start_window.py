@@ -341,11 +341,6 @@ class RedGhost(pygame.sprite.Sprite):
         elif self.dir == 'down' and self.possible_moves(x, y + self.speed):
             self.rect.y += self.speed
 
-    def target_reached(self):
-        if self.alive:
-            if pygame.sprite.spritecollideany(self, player_group):
-                return True
-
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
@@ -369,6 +364,11 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.gravity
         if pygame.sprite.spritecollideany(self, tiles_pac_group):
             self.rect.y -= self.gravity
+
+    def target_reached(self):
+        if self.alive:
+            if pygame.sprite.spritecollideany(self, ghost_group):
+                return True
 
     def win_checker(self):
         if len(diamond_group) == 0:
@@ -432,58 +432,71 @@ class Player(pygame.sprite.Sprite):
         #     break
 
 
-# class OrangeGhost(pygame.sprite.Sprite):  # Класс оранжевого призрака
-#     def __inait__(self, pos_x, pos_y):
-#         """инициализатор класса"""
-#         self.direction = 'up'
-#         self.x, self.y = pos_x, pos_y
-#         self.delay = 200
-#         self.image = pygame.image.load('photo_data/Game_photo_data/orange_ghost.png')
-#         self.image1 = pygame.transform.scale(self.image, (24, 24))
-#         self.count = 0
-#         # pygame.time.set_timer(GAME_EVENT_TYPE, self.delay)
+class OrangeGhost(pygame.sprite.Sprite):
+    def __init__(self, x_pos, y_pos):
+        super().__init__(ghost_group, all_sprites)
+        self.image = orange_image
+        self.rect = self.image.get_rect().move(
+            indentation_x + tile_width * x_pos + 15, indentation_y + tile_height * y_pos + 5)
+        self.speed = 4
+        self.dir = choice(['right', 'left'])
+        self.cell_size = 50
+        self.target_x = 0
+        self.target_y = 0
+        self.move_possibility = True
+        self.count_attempts = 0
+        self.alive = True
 
-#     # вспомогательные методы, возвращающие информацию о положении призрака / выставляющие эти значения
-#     def get_position(self):
-#         return self.x, self.y
+    def get_position(self):
+        return self.rect.x, self.rect.y
 
-#     def set_position(self, position):
-#         self.x, self.y = position
-#
-#     def get_direction(self):
-#         return self.direction
-#
-#     def set_direction(self, direction):
-#         self.direction = direction
-#
-#     #
-#     # def update_image(self):
-#     #     """метод обновления текстуры призрака"""
-#     #     self.image = pygame.image.load(f'characters/orange/{self.direction}{self.count % 2}.png')
-#     #     self.image1 = pygame.transform.scale(self.image, (24, 24))
-#     #     self.count += 1
-#
-#     def render(self, screen):
-#         """метод рендера призрака на экран"""
-#         delta = (self.image1.get_width() - tile_width) // 2
-#         screen.blit(self.image1, (self.x * tile_width - delta, self.y * tile_width - delta))
-#
-#     def move_orange(self):
-#         pac_pos = Player().get_position()
-#         """метод перемещения оранжевого призрака"""
-#         x = abs(pac_pos.get_position()[0] - self.get_position()[0])
-#         y = abs(pac_pos.get_position()[1] - self.get_position()[1])
-#         distance = round((x ** 2 + y ** 2) ** 0.5)
-#         if distance >= 8:
-#             next_position = self.labyrinth.find_path_step(self.orange.get_position(),
-#                                                           pac_pos.get_position(),
-#                                                           self.orange.get_direction())
-#         else:
-#             next_position = self.labyrinth.find_path_step(self.orange.get_position(),
-#                                                           (1, 13), self.orange.get_direction())
-#         self.orange.set_direction(find_direction(self.orange.get_position(), next_position))
-#         self.orange.set_position(next_position)
-#         self.orange.update_image()
+    def is_alive(self):
+        self.alive = False
+        self.kill()
+
+    def possible_moves(self, *coord) -> bool:
+        x, y = self.rect.x, self.rect.y
+        self.rect.x, self.rect.y = coord
+        if pygame.sprite.spritecollideany(self, tiles_ghosts_group):
+            self.rect.x, self.rect.y = x, y
+            return False
+        self.rect.x, self.rect.y = x, y
+        return True
+
+    def move_towards(self, target_x, target_y):
+        self.target_reached()
+        target_ways = []
+        x, y = self.rect.x, self.rect.y
+
+        directions = {
+            'up': (x, y - self.speed),
+            'down': (x, y + self.speed),
+            'left': (x - self.speed, y),
+            'right': (x + self.speed, y)
+        }
+
+        if pygame.sprite.spritecollideany(self, crossroads_group):
+            for direction, (new_x, new_y) in directions.items():
+                if self.possible_moves(new_x, new_y):
+                    distance = ((new_x - target_x) ** 2 + (new_y - target_y) ** 2) ** 0.5
+                    target_ways.append((distance, direction))
+
+            if target_ways:
+                if random() < 0.2:
+                    self.dir = choice([way[1] for way in target_ways])
+                else:
+                    self.dir = min(target_ways)[1]
+
+        new_x, new_y = directions[self.dir]
+        if self.possible_moves(new_x, new_y):
+            if self.dir == 'right':
+                self.image = pygame.transform.flip(
+                    pygame.transform.scale(load_image('photo_data/Game_photo_data/orange_ghost.png'), (32, 32)), True,
+                    False)
+            elif self.dir == 'left':
+                self.image = pygame.transform.scale(load_image('photo_data/Game_photo_data/orange_ghost.png'), (32, 32))
+
+            self.rect.x, self.rect.y = new_x, new_y
 
 
 FPS = 50
@@ -587,7 +600,7 @@ def game_main(level):
         player.diamond_pick_up()
         player.ammo_pick_up()
         result = player.win_result_taker()
-        if redghost.target_reached() or result is True:
+        if player.target_reached() or result is True:
             final_window(total_score, result, level)
             terminate()
         target_x, target_y = player.get_position()
@@ -645,47 +658,7 @@ def menu_shower():
     pygame.display.update()
 
 
-# def map_creation(level):
-#     # Определение карты
-#     with open(f'levels_data/level{level}_data', 'r', encoding='utf-8') as f:
-#         read_data = f.readlines()
-#     map_ = read_data
-#     # Инициализация Pygame
-#     pygame.init()
-#
-#     if level == 1:
-#         # Размеры ячеек
-#         cell_size = 60
-#         # Создание отступа
-#         strip = 150
-#
-#     elif level == 2:
-#         cell_size = 25
-#         strip = 400
-#
-#     elif level == 3:
-#         cell_size = 34
-#         strip = 360
-#
-#     # Создание радиуса шариков
-#     r = abs(6 - level)
-#     # Отрисовка карты
-#     for row_index, row in enumerate(map_):
-#         for col_index, cell in enumerate(row.split(',')):
-#             if cell == 'x':
-#                 pygame.draw.rect(screen, (0, 0, 255),
-#                                  (strip + col_index * cell_size, row_index * cell_size, cell_size, cell_size))
-#             elif cell == 'o':
-#                 pygame.draw.rect(screen, (0, 0, 0),
-#                                  (strip + col_index * cell_size, row_index * cell_size, cell_size, cell_size))
-#                 pygame.draw.circle(screen, (255, 255, 0), (
-#                     strip + col_index * cell_size + cell_size // 2, row_index * cell_size + cell_size // 2), r)
-#             elif cell == 'g':
-#                 pygame.draw.rect(screen, (30, 10, 10),
-#                                  (strip + col_index * cell_size, row_index * cell_size, cell_size, cell_size))
-#             elif cell == 's':
-#                 pygame.draw.rect(screen, (1, 1, 21),
-#                                  (strip + col_index * cell_size, row_index * cell_size, cell_size, cell_size))
+
 
 
 def image_downloader():
