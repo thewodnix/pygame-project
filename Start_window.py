@@ -762,7 +762,7 @@ quit_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 200, 300, 100)
 settings_button_rect = pygame.Rect(width // 2 - 150, height // 2 + 75, 300, 100)
 surf_play, rect_play, text_play = button_maker('Play', 300, 100, 60)
 surf_quit, rect_quit, text_quit = button_maker('Quit', 300, 100, 60)
-surf_settings, rect_settings, text_settings = button_maker('Settings', 300, 100, 60)
+surf_settings, rect_settings, text_settings = button_maker('How to play', 300, 100, 60)
 
 cheat_code_button_rect = pygame.Rect(0, 0, 300, 100)
 surf_cheat_code, rect_cheat_code, text_cheat_code = button_maker('Cheat', 150, 50, 60)
