@@ -104,6 +104,7 @@ tile_images = {
 player_image = pygame.transform.scale(load_image_special('animation4.png', 'White'),
                                       (30, 30))
 redghost_image = pygame.transform.scale(load_image_special('Game_photo_data/red.png'), (30, 30))
+redghost_rev_image = pygame.transform.scale(load_image_special('Game_photo_data/red_reversed.png'), (30, 30))
 orange_image = pygame.transform.scale(load_image_special('Game_photo_data/orange_ghost.png'), (30, 30))
 
 
@@ -242,11 +243,14 @@ class Ground(pygame.sprite.Sprite):
 class RedGhost(pygame.sprite.Sprite):
     def __init__(self, x_pos, y_pos):
         super().__init__(ghost_group, all_sprites)
-        self.image = redghost_image
+        self.dir = choice(['right', 'left'])
+        if self.dir == 'right':
+            self.image = redghost_rev_image
+        elif self.dir == 'left':
+            self.image = redghost_image
         self.rect = self.image.get_rect().move(
             indentation_x + tile_width * x_pos, indentation_y + tile_height * y_pos)
         self.speed = 4
-        self.dir = choice(['right', 'left'])
         self.cell_size = 30
         self.target_x = 0
         self.target_y = 0
@@ -322,6 +326,10 @@ class RedGhost(pygame.sprite.Sprite):
             if self.count_attempts == 10:
                 self.count_attempts = 0
                 self.dir = min(target_ways)[1]
+                if self.dir == 'right':
+                    self.image = redghost_rev_image
+                elif self.dir == 'left':
+                    self.image = redghost_image
 
         if self.dir == 'right' and self.possible_moves(x + self.speed, y):
             self.rect.x += self.speed
@@ -338,7 +346,18 @@ class Player(pygame.sprite.Sprite):
         super().__init__(player_group, all_sprites)
         self.gravity = 4
         self.score = 0
-        self.image = player_image
+        self.is_right = True
+        self.image_sprites = [pygame.transform.scale(load_image_special("animation1.png", 'white'), (30, 30)),
+                              pygame.transform.scale(load_image_special("animation2.png", 'white'), (30, 30)),
+                              pygame.transform.scale(load_image_special("animation3.png", 'white'), (30, 30))]
+        self.image_sprites_rev = [pygame.transform.scale(load_image_special("animation1_rev.png", 'white'), (30, 30)),
+                              pygame.transform.scale(load_image_special("animation2_rev.png", 'white'), (30, 30)),
+                              pygame.transform.scale(load_image_special("animation3_rev.png", 'white'), (30, 30))]
+        self.index = 0
+        if self.is_right:
+            self.image = pygame.transform.scale(load_image_special("animation4.png", 'white'), (30, 30))
+        else:
+            self.image = pygame.transform.scale(load_image_special("animation4_rev.png", 'white'), (30, 30))
         self.rect = self.image.get_rect().move(
             indentation_x + tile_width * pos_x, indentation_y + tile_height * pos_y)
         self.jumpCount = 0
@@ -370,6 +389,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.x -= self.speed
             if pygame.sprite.spritecollideany(self, tiles_pac_group):
                 self.rect.x += self.speed
+            self.is_right = False
         elif pos == 'shot':
             if self.ammo_count:
                 bullet = Bullet(self.rect.x, self.rect.y, direction)
@@ -392,6 +412,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.x += self.speed
             if pygame.sprite.spritecollideany(self, tiles_pac_group):
                 self.rect.x -= self.speed
+            self.is_right = True
 
     def diamond_pick_up(self):
         if pygame.sprite.spritecollideany(self, diamond_group):
@@ -421,6 +442,17 @@ class Player(pygame.sprite.Sprite):
         # for i in diamond_group: красиво удаляет кристаллы
         #     print(i.kill())
         #     break
+
+    def update(self):
+        self.index += 1
+
+        if self.index >= len(self.image_sprites):
+            self.index = 0
+
+        if self.is_right:
+            self.image = self.image_sprites[self.index]
+        else:
+            self.image = self.image_sprites_rev[self.index]
 
 
 class OrangeGhost(pygame.sprite.Sprite):
@@ -498,7 +530,7 @@ player = None
 redghost = None
 orangeghost = None
 
-#все группы спрайтов
+# все группы спрайтов
 crossroads_group = pygame.sprite.Group()
 bullet_group = pygame.sprite.Group()
 ammo_group = pygame.sprite.Group()
@@ -559,7 +591,7 @@ def generate_ghost_orange(level):
 
 
 def terminate():
-    #полный выход
+    # полный выход
     pygame.quit()
     sys.exit()
 
@@ -568,10 +600,6 @@ def game_main(level):
     player, level_x, level_y = generate_level(load_level(f'levels_data/level{level}_data'))
     redghost, level_x, level_y = generate_ghost(load_level(f'levels_data/level{level}_data'))
     orangeghost, level_x, level_y = generate_ghost_orange(load_level(f'levels_data/level{level}_data'))
-    image_sprite = [load_image_special("animation1.png", 'white'),
-                    load_image_special("animation2.png", 'white'),
-                    load_image_special("animation3.png", 'white'),
-                    load_image_special("animation4.png", 'white')]
     value = 0
     moving = False
     screen.fill((0, 0, 0))
@@ -599,16 +627,6 @@ def game_main(level):
                     player.move('shot', 'right')
                 elif event.key == pygame.K_LEFT:
                     player.move('shot', 'left')
-                if event.key == pygame.K_a or event.key == pygame.K_d:
-                    moving = False
-                    value = 0
-        if moving:
-            value += 1
-        if value >= len(image_sprite):
-            value = 0
-        image = image_sprite[value]
-        image = pygame.transform.scale(image, (30, 30))
-        screen.blit(image, (player.get_position()))
         keys = pygame.key.get_pressed()
         # Управление на ASD
         if keys[pygame.K_a]:
@@ -621,7 +639,7 @@ def game_main(level):
             player.move('jump', 'pass')
         if keys[pygame.K_s]:
             player.move('down', 'pass')
-            # pygame.mouse.set_visible(False)
+        player.update()
         redghost.move_towards(target_x, target_y)
         orangeghost.move_towards(target_x, target_y)
         player.gravitation()
@@ -641,7 +659,7 @@ def menu_shower(fa=False):
     image = load_image_special('photo_menu_data/Pac_manModel3.png', 'WHITE')
     # рисуем спрайт
     image1 = pygame.transform.scale(image, (110, 110))
-    screen.blit(image1, (width // 2 - 150, height // 2 - 63 - height * 0.33))
+    screen.blit(image1, (width // 2 - 240, height // 2 - 63 - height * 0.33))
     # Показать текст кнопки
     surf_play.blit(text_play, rect_play)
     surf_quit.blit(text_quit, rect_quit)
@@ -657,7 +675,7 @@ def menu_shower(fa=False):
 
 
 def cheats_shower():
-    #показваем кнопку
+    # показваем кнопку
     surf_cheat_code.blit(text_cheat_code, rect_cheat_code)
     screen.blit(surf_cheat_code, (cheat_code_button_rect.x, cheat_code_button_rect.y))
 
@@ -790,11 +808,11 @@ def start_window_draw(screen):
     screen.fill((1, 1, 20))
     font = pygame.font.Font(None, 20)
     text = font.render("By VORFIL Team", True, (255, 255, 0))
-    text_x = width // 2 - text.get_width() // 2 - 270
-    text_y = height // 2 - text.get_height() // 2 + 60 - height * 0.33
+    text_x = width // 2 - text.get_width() // 2 - 450
+    text_y = height // 2 - text.get_height() // 2 + 50 - height * 0.33
     screen.blit(text, (text_x, text_y))
-    font = pygame.font.Font(None, 200)
-    text = font.render("PA   -MAN", True, (255, 255, 0))
+    font = pygame.font.Font(None, 170)
+    text = font.render("COSMI   -ADVENTURE", True, (255, 255, 0))
     text_x = width // 2 - text.get_width() // 2
     text_y = height // 2 - text.get_height() // 2 - height * 0.33
     screen.blit(text, (text_x, text_y))
@@ -850,7 +868,7 @@ def start_window():
     show_text = True
     text_surf = font_text.render('press  any  button  to  start', True, (255, 255, 0))
     x_pos = -90
-    coord_balls = [0, 200, 400, 600]
+    coord_balls = [0, 200, 400, 600, 800, 1000, 1200]
     running = True
     k = 0
     menu = False
@@ -870,7 +888,7 @@ def start_window():
             running = False
         else:
             start_window_draw(screen)
-            if x_pos < width // 2 - 150:
+            if x_pos < width // 2 - 240:
                 x_pos += 10
                 image = animation_set[k // 20]
                 image1 = pygame.transform.scale(image, (110, 110))

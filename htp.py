@@ -13,7 +13,7 @@ pygame.display.set_caption("Обучение")
 font = pygame.font.Font(None, 50)
 
 clock = pygame.time.Clock()
-player_image = pygame.transform.scale(load_image_special('photo_menu_data/Pac_manModel1.png', 'White'),
+player_image = pygame.transform.scale(load_image_special('animation4.png', 'White'),
                                       (50, 50))
 all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
@@ -49,6 +49,8 @@ class Player(pygame.sprite.Sprite):
                 self.rect.x -= self.speed
         elif pos == 'jump':
             self.velocity_y = -self.jump_power
+            if pygame.sprite.spritecollideany(self, tiles_group):
+                self.rect.y += self.jump_power
 
     def gravitation(self):
         self.rect.y += self.velocity_y
@@ -76,7 +78,7 @@ instructions = [
     "Управление:",
     "- A - Движение влево",
     "- D - Движение вправо",
-    "- W - Прыжок (можно прыгать повторно)",
+    "- SPACE - Прыжок (можно прыгать повторно)",
     "",
     "Попробуйте протестировать слева!",
     "Нажмите ESC для выхода."
@@ -105,7 +107,7 @@ def game():
             player.move('left')
         if keys[pygame.K_d]:
             player.move('right')
-        if keys[pygame.K_w]:
+        if keys[pygame.K_SPACE]:
             player.move('jump')
         player.gravitation()
         all_sprites.draw(screen)

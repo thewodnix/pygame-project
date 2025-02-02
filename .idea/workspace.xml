@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0835760e-8f24-4bd7-b511-93917dcaa135" name="Changes" comment=";(">
-      <change afterPath="$PROJECT_DIR$/htp.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Start_window.py" beforeDir="false" afterPath="$PROJECT_DIR$/Start_window.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/load_sprites.py" beforeDir="false" afterPath="$PROJECT_DIR$/load_sprites.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/htp.py" beforeDir="false" afterPath="$PROJECT_DIR$/htp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels_data/level1_data" beforeDir="false" afterPath="$PROJECT_DIR$/levels_data/level1_data" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/levels_data/level2_data" beforeDir="false" afterPath="$PROJECT_DIR$/levels_data/level2_data" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/photo_data/animation1.aseprite" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,22 +56,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.Start_window.executor": "Run",
-    "Python.const.executor": "Run",
-    "Python.first_level.executor": "Run",
-    "Python.htp.executor": "Run",
-    "Python.level_attempt.executor": "Run",
-    "Python.load_sprites.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "Dev-level",
-    "last_opened_file_path": "C:/PycharmProjects/pygame-project/Start_window.py",
-    "two.files.diff.last.used.file": "C:/PycharmProjects/pygame-project/Start_window.py"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.Start_window.executor&quot;: &quot;Run&quot;,
+    &quot;Python.const.executor&quot;: &quot;Run&quot;,
+    &quot;Python.first_level.executor&quot;: &quot;Run&quot;,
+    &quot;Python.htp.executor&quot;: &quot;Run&quot;,
+    &quot;Python.level_attempt.executor&quot;: &quot;Run&quot;,
+    &quot;Python.load_sprites.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Dev-level&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/PycharmProjects/pygame-project/Start_window.py&quot;,
+    &quot;two.files.diff.last.used.file&quot;: &quot;C:/PycharmProjects/pygame-project/Start_window.py&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\PycharmProjects\pygame-project\photo_data" />
@@ -90,7 +91,6 @@
   <component name="RunManager" selected="Python.Start_window">
     <configuration name="Start_window" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pygame-project" />
-      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -112,7 +112,6 @@
     </configuration>
     <configuration name="jump_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pygame-project" />
-      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -134,7 +133,6 @@
     </configuration>
     <configuration name="just_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pygame-project" />
-      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -156,7 +154,6 @@
     </configuration>
     <configuration name="level_attempt" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="pygame-project" />
-      <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
@@ -313,7 +310,23 @@
       <option name="project" value="LOCAL" />
       <updated>1738440771860</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary=";(">
+      <option name="closed" value="true" />
+      <created>1738447075974</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1738447075974</updated>
+    </task>
+    <task id="LOCAL-00016" summary=";(">
+      <option name="closed" value="true" />
+      <created>1738447088320</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1738447088320</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
